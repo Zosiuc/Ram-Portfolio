@@ -67,7 +67,7 @@ onMounted(async () => {
       <div class="media">
         <!-- VIDEO sectie -->
         <div
-          v-for="item in event.media.filter(m => m.media_type === 'video')"
+          v-for="item in event.media.filter((m:any) => m.media_type === 'video')"
           :key="'video-' + item.id"
           class="media_video"
         >
@@ -85,7 +85,7 @@ onMounted(async () => {
         <!-- IMAGE sectie -->
         <div class="media_gallery">
           <div
-            v-for="item in event.media.filter(m => m.media_type === 'image')"
+            v-for="item in event.media.filter((m:any) => m.media_type === 'image')"
             :key="'image-' + item.id"
             class="media_image"
           >

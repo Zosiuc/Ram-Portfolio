@@ -10,25 +10,38 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { api } from '../lib/api';
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, type ChartData } from 'chart.js';
 import { Line } from 'vue-chartjs';
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
 
-const chartData = ref({ labels: [], datasets: [{}] });
+const chartData = ref<ChartData<'line'>>({
+  labels: [],
+  datasets: [
+    {
+      label: 'Visits',
+      data: [],
+      borderColor: 'blue'
+    }
+  ]
+});
+
 const LineChart = Line;
 
 onMounted(async () => {
   const { data } = await api.get('/analytics/summary');
   chartData.value = {
-    labels: data.last30d.map((d:any) => d.day),
-    datasets: [{
-      label: 'Visits',
-      data: data.last30d.map((d:any) => d.visits),
-      borderColor: 'blue'
-    }]
+    labels: data.last30d.map((d: any) => d.day),
+    datasets: [
+      {
+        label: 'Visits',
+        data: data.last30d.map((d: any) => d.visits),
+        borderColor: 'blue'
+      }
+    ]
   };
 });
+
 </script>
 <style  scoped>
 .analytics{

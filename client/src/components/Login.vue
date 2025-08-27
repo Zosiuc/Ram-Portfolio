@@ -22,7 +22,7 @@ async function submit() {
     await router.push("/dashboard");
 
   } catch (e: any) {
-    error.value = e.response?.data?.message || "Login failed";
+    error.value = e ||"Login failed";
   }
 }
 </script>
@@ -49,7 +49,7 @@ async function submit() {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 90vw;
   height: 100vh;
   gap: 20px;
 }

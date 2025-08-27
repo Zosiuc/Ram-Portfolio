@@ -9,7 +9,7 @@ class AdminUserSeeder extends Seeder {
     public function run(): void {
         User::updateOrCreate(
             ['email' => 'admin@ram-portfolio.test'],
-            ['name' => 'Ram Admin', 'password' => Hash::make('ChangeMe!123')]
+            ['name' => 'Ram', 'password' => Hash::make('ChangeMe!123')]
         );
     }
 }

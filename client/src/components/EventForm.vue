@@ -21,7 +21,7 @@ const form = ref({
   description:'',
   location: '',
   date: '',
-  media: [] as { type: string, file?: File, url: string }[]
+  media: [] as { type: string, file?: File, url?: string }[]
 })
 
 watch(() => msg.value.text, (newVal) => {
@@ -39,7 +39,7 @@ watch(() => msg.value.text, (newVal) => {
 // Add new media block
 
 const addMedia = () => {
-  form.value.media.push({ type: 'image' })// default image
+  form.value.media.push({type: 'image' })// default image
 
 }
 
@@ -82,7 +82,7 @@ const submit = async () => {
     formData.append(`media[${index}][media_type]`, m.type)
     if (m.type === 'image' && m.file) {
       formData.append(`media[${index}][file]`, m.file)
-    } else if (m.type === 'video') {
+    } else if (m.type === 'video' && m.url) {
       formData.append(`media[${index}][url]`, m.url)
     }
   })

@@ -24,7 +24,7 @@ const form = ref({
   id:null,
   title: '',
   description: '',
-  media: [] as { type: string, file?: File, url: string }[]
+  media: [] as { type: string, file?: File, url?: string }[]
 })
 
 onMounted(async () => {
@@ -92,14 +92,14 @@ watch(() => msg.value.text, (newVal) => {
 
 const submit = async () => {
   const formData = new FormData()
-  formData.append('portfolio_item_id', form.value.portfolio_item_id)
+  formData.append('portfolio_item_id', form.value.portfolio_item_id ?? '')
   formData.append('title', form.value.title)
   formData.append('description', form.value.description)
   form.value.media.forEach((m, index) => {
     formData.append(`media[${index}][media_type]`, m.type)
     if (m.type === 'image' && m.file) {
       formData.append(`media[${index}][file]`, m.file)
-    } else if (m.type === 'video') {
+    } else if (m.type === 'video' && m.url) {
       formData.append(`media[${index}][url]`, m.url)
     }
   })

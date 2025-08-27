@@ -245,7 +245,7 @@ const submit = async () => {
       formData.append(`experience[${index}][id]`, e.id)
       formData.append(`experience[${index}][title]`, e.title)
       formData.append(`experience[${index}][description]`, e.description)
-      formData.append(`experience[${index}][company_name]`, e.company_name)
+      formData.append(`experience[${index}][company_name]`, e.company_name ?? '')
       formData.append(`experience[${index}][start_date]`, e.start_date)
       formData.append(`experience[${index}][end_date]`, e.end_date)
     })

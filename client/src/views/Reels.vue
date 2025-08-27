@@ -7,6 +7,11 @@ const loading = ref<boolean>(true);
 interface Reel {
   url: string;
 }
+declare global {
+  interface Window {
+    instgrm?: any;
+  }
+}
 
 const props = defineProps<{
   reels: Reel[];
@@ -92,10 +97,7 @@ onMounted(async () => {
 
 
 <style scoped>
-.reels{
 
-
-}
 
 .instagram-video-wrapper {
   display: flex;
