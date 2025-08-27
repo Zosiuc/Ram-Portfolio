@@ -71,7 +71,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class=" portfolio_dashboard ">
+  <main class=" portfolio_dashboard ">
     <DashboardList class="portfolio_items">
       <template #heading>
         Portfolio Items
@@ -88,11 +88,11 @@ onMounted(async () => {
             <h3>{{ item.title }}</h3>
             <i>{{ item.description }}</i>
             <nav class="buttons_nav">
-              <RouterLink :to="`/dashboard/portfolio_item/${item.id}`" @click.native="scrollToView">
+              <RouterLink class="pi_button green" :to="`/dashboard/portfolio_item/${item.id}`" @click.native="scrollToView">
                 Edit
               </RouterLink>
               |
-              <button class="delete_button green" @click="handleDelete('portfolio_items',item.id)">
+              <button class="pi_button green" @click="handleDelete('portfolio_items',item.id)">
                 Delete
               </button>
             </nav>
@@ -111,15 +111,15 @@ onMounted(async () => {
       </template>
       <template #list>
         <div v-if="error && !subjects " class="">Fout: {{ error }}</div>
-        <ul v-else>
+        <ul v-else class="items">
           <li class="item" v-for="subject in subjects" :key="subject.id">
             <h3>{{ subject.title }}</h3>
             <i>{{ subject.description }}</i>
             <nav class="buttons_nav">
-              <RouterLink :to="`/dashboard/subject/${subject.id}`" @click.native="scrollToView">Edit
+              <RouterLink class="pi_button green"  :to="`/dashboard/subject/${subject.id}`" @click.native="scrollToView">Edit
               </RouterLink>
               |
-              <button class="delete_button green" @click="handleDelete('subjects',subject.id)">
+              <button class="pi_button green" @click="handleDelete('subjects',subject.id)">
                 Delete
               </button>
             </nav>
@@ -129,7 +129,7 @@ onMounted(async () => {
       </template>
     </DashboardList>
 
-  </div>
+  </main>
 
 </template>
 
@@ -138,20 +138,23 @@ onMounted(async () => {
 .portfolio_dashboard {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  justify-content: start;
   width: 100%;
-  padding: 1rem;
-  gap: 1rem;
+
+  padding: 1rem 2rem 8rem 2rem;
+  gap: 1.5rem;
+
 }
 
 
 .portfolio_items {
-  background: linear-gradient(rgba(140, 188, 188, 0.51), rgba(65, 103, 103, 0.76), rgba(88, 129, 129, 0.49), rgba(31, 81, 81, 0.15));
+  background: var(--color-background-mute);
+
 
 }
 
 .subject {
-  background: linear-gradient(rgba(115, 179, 116, 0.55), rgba(74, 124, 74, 0.73), rgba(52, 96, 53, 0.4), rgba(18, 71, 19, 0.19));
+  background: var(--color-background-mute);
 
 }
 
@@ -164,7 +167,7 @@ onMounted(async () => {
 }
 
 .item {
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--color-border);
   border-radius: 7px;
 }
 
@@ -174,30 +177,14 @@ onMounted(async () => {
   gap: 1rem;
   align-items: center;
   padding: 5px;
+  margin-top: 20px;
 }
 
-.delete_button {
-  text-decoration: none;
-  border: none;
-  background: none;
-  transition: 0.4s;
-  padding: 3px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: hsl(180, 11%, 50%);
-    color: var(--vt-c-white);
-  }
-}
-
-@media ( min-width: 732px ) {
-  .portfolio_dashboard {
-    display: flex;
-    flex-direction: row;
-
-  }
 
 
-}
+
+
+
+
 
 </style>

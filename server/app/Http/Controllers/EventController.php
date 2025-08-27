@@ -11,7 +11,7 @@ class EventController extends Controller {
 
 
     public function store(Request $r){
-        \Log::info($r->all());
+
         $data = $r->validate([
             'title'=>'required',
             'description'=>'nullable',

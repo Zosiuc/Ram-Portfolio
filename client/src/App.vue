@@ -1,40 +1,32 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import Hero from "@/components/Hero.vue";
-import { onMounted } from "vue";
+
 import { useAuth } from "@/stores/auth";
 import Logout from "@/components/Logout.vue";
 
 const auth = useAuth();
 
-onMounted(() => {
-  auth.me(); // check ingelogde gebruiker
-});
+
+
+
 </script>
 
 <template>
   <header>
     <Logout />
-    <img alt="Vue logo" class="logo" src="@/assets/logo-light.png" width="300" height="300" />
+    <nav :class="  auth.user ? `admin_nav nav` : `visitor_nav nav` ">
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/reels">Show Reels</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/upcoming">Upcoming</RouterLink>
+      <RouterLink v-if="auth.user" to="/dashboard">Dashboard</RouterLink>
+    </nav>
 
-    <div class="wrapper">
-      <Hero
-        name="Ram"
-        title="Singer | Actor | Musical Theater Performer"
-      />
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/news">Niews</RouterLink>
-        <RouterLink to="/contact">Contact</RouterLink>
-        <RouterLink to="/dashboard">Dashboard</RouterLink>
-      </nav>
-    </div>
   </header>
+  <div :class="auth.user ? 'admin_view' : '' ">
+    <RouterView />
+  </div>
 
-  <main>
-    <RouterView class="main"/>
-  </main>
 
   <footer>
     <div class="footer-wrapper">
@@ -52,22 +44,44 @@ onMounted(() => {
 header {
   line-height: 1.5;
   max-height: 100vh;
+  position: relative;
+  padding: .5rem;
+
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+.nav{
   width: 100%;
-  font-size: 12px;
+  min-height: 2.5rem;
   text-align: center;
-  margin-top: 2rem;
+
+  place-content: center;
+  background-color: var(--color-background-mute);
+  position: fixed;
+  backdrop-filter: blur(15px);
+  z-index: 1000;
+  top: 0;
+  left: 0;
+
+}
+
+.admin_nav{
+  margin-top: 63px;
+
+}
+.admin_view{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 90px;
+
+}
+.visitor_nav {
+
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: var(--color-text-1);
 }
 
 nav a.router-link-exact-active:hover {
@@ -84,24 +98,18 @@ nav a:first-of-type {
   border: 0;
 }
 
-main {
-  margin: 30px 0 ;
-  grid-column: span 2;
 
-}
 
 footer {
+  flex: 1;
   position: fixed;
   bottom: 0;
   left: 0;
-  color: white;
-  align-items: center;
-  justify-content: center;
   margin-top: 1rem;
   width: 100%;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(155, 166, 168, 0.2);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  background-color: var(--color-background-mute);
 
 }
 .poweredBlok {
@@ -119,7 +127,7 @@ footer {
   position: absolute;
   top: 0;
   left: 0;
-  color: var(--color-text);
+  color: var(--color-text-1);
 }
 
 .poweredBlok img {
@@ -140,32 +148,6 @@ footer {
 }
 
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    grid-column: span 2;
-    padding-right: calc(var(--section-gap) / 2);
-  }
 
-  .logo {
-    margin: 0 2rem 0 0;
-    width: 30rem;
-    height: 30rem;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
 }
 </style>

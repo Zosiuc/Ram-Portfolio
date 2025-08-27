@@ -6,53 +6,105 @@
 
 
 :root {
-  --vt-c-white: linear-gradient( #2b2b2b, #2b2b2b, #8e989a, #a4b3b5);
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --vt-c-light: linear-gradient( #ffffff, #ffffff);
+  --vt-c-light-soft: rgb(157, 200, 205);
+  --vt-c-light-soft-blur: rgba(157, 199, 204, 0.29);
+  --vt-c-light-mute: rgba(41, 51, 58, 0.15);
+  --vt-c-light-mute-blur: rgba(41, 51, 58, 0.15);
+  --vt-c-light-button: #97c5ca;
+  --vt-c-light-button-2: #a3c5c8;
 
-  --vt-c-black: linear-gradient( #2b2b2b, #2b2b2b, #8e989a, #a4b3b5);
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --vt-c-dark: linear-gradient( #5c6e71, #2b2b2b);
+  --vt-c-dark-soft: #a4b3b5;
+  --vt-c-dark-soft-blur: rgba(255, 255, 255, 0.07);
+  --vt-c-dark-mute: rgba(91, 116, 119, 0.19);
+  --vt-c-dark-mute-blur: rgba(91, 116, 119, 0.19);
+  --vt-c-dark-button: #ffffff;
+  --vt-c-dark-button-2: #ffffff;
 
-  --vt-c-indigo: #f8fbfd;
-  --vt-c-dark: #aa0d0d;
+  --vt-h-bg-light: rgba(57, 118, 122, 0.76);
+  --vt-h-text-light: #ffffff;
+
+  --vt-h-text-dark: #ffffff;
+  --vt-h-bg-dark: #081c1e;
+
+  --vt-c-link-light: rgba(33, 39, 43, 0.59);
+  --vt-c-link-dark: rgba(231, 239, 236, 0.73);
+
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --vt-c-divider-light-2: rgb(158, 189, 192);
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
+  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --vt-c-divider-dark-2: rgba(244, 240, 240, 0.48);
+
+  --vt-c-text-light-button: #27504b;
+  --vt-c-text-light-button-2: #ffffff;
+
+  --vt-c-text-dark-button: #ffffff;
+  --vt-c-text-dark-button-2: #0c4c47;
+
+  --vt-c-text-light-1: black ;
+  --vt-c-text-light-2: rgb(55, 126, 131);
+
+  --vt-c-text-dark-1: #89dade;
   --vt-c-text-dark-2: rgb(255, 255, 255);
+
+  --vt-c-fout-light: rgba(200, 94, 94, 0.6);
+  --vt-c-fout-dark: #af5252;
+
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+
+  --color-background: var(--vt-c-light);
+  --color-background-soft: var(--vt-c-light-soft);
+  --color-background-soft-blur: var(--vt-c-light-soft-blur);
+  --color-background-mute: var(--vt-c-light-mute);
+  --color-background-heading:var(--vt-h-bg-light);
+
+  --color-background-button:var(--vt-c-light-button);
+  --color-background-button-2:var(--vt-c-light-button-2);
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-text-heading:var(--vt-h-text-light);
+  --color-text-1: var(--vt-c-text-light-1);
+  --color-text-2: var(--vt-c-text-light-2);
 
-  --section-gap: 160px;
+  --color-text-button: var(--vt-c-text-light-button);
+  --color-text-button-2: var(--vt-c-text-light-button-2);
+
+  --color-link: var(--vt-c-link-light);
+
+  --color-fout: var(--vt-c-fout-light);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+    --color-background: var(--vt-c-dark);
+    --color-background-soft: var(--vt-c-dark-soft);
+    --color-background-soft-blur: var(--vt-c-dark-soft-blur);
+    --color-background-mute: var(--vt-c-dark-mute);
+    --color-background-heading:var(--vt-h-bg-light);
+    --color-background-button:var(--vt-c-dark-button);
+    --color-background-button-2:var(--vt-c-dark-button-2);
 
     --color-border: var(--vt-c-divider-dark-2);
     --color-border-hover: var(--vt-c-divider-dark-1);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
+    --color-text-heading:var(--vt-h-text-dark);
+    --color-text-1: var(--vt-c-text-dark-1);
+    --color-text-2: var(--vt-c-text-dark-2);
+
+    --color-text-button: var(--vt-c-text-dark-button);
+    --color-text-button-2: var(--vt-c-text-dark-button-2);
+
+
+    --color-link: var(--vt-c-link-dark);
+
+    --color-fout: var(--vt-c-fout-dark);
   }
 }
 
@@ -65,28 +117,21 @@
 }
 
 body {
-  position: relative;
-  padding-bottom: 50px;
-  min-height: 100vh;
-  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100lvh;
+  color: var(--color-text-2);
   background: var(--color-background);
   transition:
     color 0.5s,
     background-color 0.5s;
   line-height: 1.6;
   font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+    "fantasy",
+    "Times New Roman",
+    "ui-serif",
+    "serif" ;
   font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

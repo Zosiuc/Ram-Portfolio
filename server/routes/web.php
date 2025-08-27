@@ -3,13 +3,19 @@
 use App\Models\SubjectMedia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AuthController,
+    EducationController,
     EventMediaController,
+    ExperienceController,
     PortfolioItemController,
     EventController,
     MessageController,
     AnalyticsController,
+    ReelController,
+    SkillController,
+    SocialMediaController,
     SubjectController,
-    SubjectMediaController};
+    SubjectMediaController,
+    UserMetaController};
 
 Route::post('/login',[AuthController::class,'login']);
 Route::get('/me',[AuthController::class,'me'])->middleware('auth:sanctum');
@@ -35,4 +41,14 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('messages', MessageController::class);
     Route::get('/messages',[MessageController::class,'index']);
     Route::get('/analytics/summary',[AnalyticsController::class,'summary']);
+});
+
+Route::apiResource('user-metas', UserMetaController::class);
+
+Route::prefix('user-metas/{userMeta}')->group(function () {
+    Route::apiResource('education', EducationController::class);
+    Route::apiResource('experience', ExperienceController::class);
+    Route::apiResource('skills', SkillController::class);
+    Route::apiResource('social-media', SocialMediaController::class);
+    Route::apiResource('reels', ReelController::class);
 });

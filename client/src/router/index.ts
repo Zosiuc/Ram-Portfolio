@@ -11,21 +11,25 @@ import Messages from '../views/Messages.vue';
 import { useAuth } from '../stores/auth';
 import About from "@/views/About.vue";
 import Contact from "@/views/Contact.vue";
-import Niews from "@/views/Niews.vue";
+import Upcoming from "@/views/Upcoming.vue";
 import SubjectForm from "@/components/SubjectForm.vue";
+import Profile from "@/views/Profile.vue";
+import Reels from "@/views/Reels.vue";
 
 
 const routes = [
   { path: '/', component: Home },
   { path: '/login', component: Login },
   { path: '/about', component: About },
-  { path: '/news', component: Niews },
+  { path: '/reels', component: Reels },
+  { path: '/upcoming', component: Upcoming },
   { path: '/contact', component: Contact },
   {
     path: '/dashboard',
     component: Dashboard,
     meta: { auth: true },
     children: [
+      { path: 'profile', component: Profile},
       { path: 'portfolio', component: PortfolioList},
       { path: 'portfolio_item/new', component: PortfolioForm, props: { heading: "Add new portfolio item" } },
       { path: 'portfolio_item/:id', component: PortfolioForm, props: (route:any) => ({heading: `Edit portfolio item #${route.params.id}`, id: route.params.id }) },

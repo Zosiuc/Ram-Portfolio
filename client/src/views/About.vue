@@ -2,95 +2,368 @@
 import AboutItem from '../components/AboutItem.vue'
 import BioIcon from '../components/icons/IconBio.vue'
 import EducationIcon from '../components/icons/IconEducation.vue'
+import ExperienceIcon from '../components/icons/IconExperience.vue'
+import SkillsIcon from '../components/icons/IconSkills.vue'
 import CommunityIcon from '../components/icons/IconCommunity.vue'
-import SupportIcon from '../components/icons/IconSupport.vue'
+import {onMounted, ref} from "vue";
+import {api} from '@/lib/api.ts'
+
+const imgURL = import.meta.env.VITE_API_URL + "/";
+const loading = ref<boolean>(true);
+
+// Types
+interface Education {
+  id: string;
+  title: string;
+  description: string;
+  start_date: string | null;
+  end_date: string | null;
+}
+
+interface Experience extends Education {
+  company_name?: string;
+}
+
+interface Skill {
+  id: string;
+  title: string;
+  description: string;
+}
+
+interface Social {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+}
+
+const details = ref({
+  first_name: '',
+  last_name: '',
+  email: '',
+  mobile: '',
+  profile_photo: '',
+  cover_photo: ''
+
+})
+
+const bio = ref('')
+const educationBio = ref('')
+const education = ref<Education[]>([]);
+const experiences = ref<Experience[]>([]);
+const skills = ref<Skill[]>([]);
+const social_media = ref<Social[]>([]);
+
+
+const mapArray = <T>(arr: any[], keys: (keyof T)[]): T[] =>
+  arr.map((obj) =>
+    Object.fromEntries(keys.map((k) => [k, obj[k] ?? ""])) as T
+  );
+
+onMounted(async () => {
+  try {
+
+    const {data} = await api.get('/user-metas/1')
+
+    Object.assign(details.value, {
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      mobile: data.number,
+      profile_photo: data.profile_photo,
+      cover_photo: data.cover_photo,
+    });
+
+    bio.value = data.bio
+    educationBio.value = data.education_bio
+    education.value = Array.isArray(data.education)
+      ? mapArray<Education>(data.education, [
+        "id",
+        "title",
+        "description",
+        "start_date",
+        "end_date",
+      ])
+      : [];
+
+    experiences.value = Array.isArray(data.experience)
+      ? mapArray<Experience>(data.experience, [
+        "id",
+        "title",
+        "company_name",
+        "description",
+        "start_date",
+        "end_date",
+      ])
+      : [];
+
+    skills.value = Array.isArray(data.skills)
+      ? mapArray<Skill>(data.skills, ["id", "title", "description"])
+      : [];
+
+    social_media.value = Array.isArray(data.social_media)
+      ? mapArray<Social>(data.social_media, [
+        "id",
+        "title",
+        "description",
+        "url",
+      ])
+      : [];
+
+    loading.value = false
+
+  } catch (err: any) {
+    console.log(err.response?.data)
+  }
+
+})
 </script>
 
 <template>
+  <main v-if="loading" class="loading">
+    <h2> Prepare data ... </h2>
+  </main>
+  <main v-else class="about">
+    <section class="photo_container">
+      <div class="cover_photo">
+        <img :src="imgURL +'storage/'+details.cover_photo " alt="cover-photo"/>
+      </div>
+      <div class="profile_photo">
+        <img :src="imgURL +'storage/'+details.profile_photo " alt="profile-photo"/>
+        <AboutItem v-if="bio" class="bio_item">
+          <template #icon>
+            <BioIcon/>
+          </template>
+          <template #heading>BIO</template>
+          <template #content>
+            <i class="bio">"{{ bio }}"</i>
+            <a class="cv" href="/Ram_Farha.pdf" target="_blank">CV</a>
+          </template>
+        </AboutItem>
+      </div>
+    </section>
 
-  <AboutItem>
-    <template #icon>
-      <BioIcon/>
-    </template>
-    <template #heading>BIO</template>
-    <template #content>
-    Holding a BA in Musical Theatre From Sharjah
-    Performing Arts Academy, Ram combines formal
-    training with a passion for performance that has
-    marked his career. Known for his vibrant presence
-    on stage, He is celebrated for his passionate
-    approach to musical theatre, characterized by his
-    boundless energy, supportive demeanor, and
-    versatility in acting techniques. Beyond his
-    performances, Ram has actively contributed to the
-    arts community through teaching and managing
-    theatrical festivals.
-    <a href="/Ram_Farha.pdf" target="_blank">CV</a>
-    </template>
-  </AboutItem>
+    <section class="main">
+      <AboutItem v-if="education.length > 0" class="education item">
+        <template #icon>
+          <EducationIcon/>
+        </template>
+        <template #heading>Education</template>
+        <template #content>
+          <i class="bio">"{{ educationBio }}"</i>
+          <div class="content">
+            <div class="contentItem" v-for=" (edu, index) in education " :key="edu.id">
+              <p class="item_title">{{ edu.title }}</p>
+              <p class="about_description" v-if="edu.description">
+                • {{ edu.description }}
+              </p>
+            </div>
+          </div>
+        </template>
 
-  <AboutItem>
-    <template #icon>
-      <EducationIcon/>
-    </template>
-    <template #heading>Education</template>
-    <template #content>
-    <p>Ram Farha’s educational journey has
-      equipped him with a deep understanding
-      of the nuances of theatre from both
-      perspectives of backstage and onstage
-      characters due to his unique experiences
-      shifting from being a scenographer to
-      being the first Syrian-born artist to hold a
-      BA in musical theatre from Sharjah
-      Performing Arts Academy and to be
-      accepted into the Royal Academy of Music
-      for their MA program in Musical Theatre in
-      London.</p>
-    <div>
-      <i class="bg-red-500">-Bachelor of Arts in Musical Theatre Sharjah</i>
-      <p>
-        Performing Arts Academy, Sharjah
-        Concentration: Performance
-      </p>
-    </div>
-    <div>
-      <i>-Diploma in Scenography</i>
-      <p>
-        Higher Institution of Dramatic Arts, Damascus, Syria
-        Specialization: Set design, Costume design
-      </p>
-    </div>
-    </template>
+      </AboutItem>
+      <AboutItem v-if="experiences.length > 0" class="experiences item">
+        <template #icon>
+          <ExperienceIcon/>
+        </template>
+        <template #heading>Experiences</template>
+        <template #content>
+          <div class="content">
+            <div class="contentItem" v-for=" (exp, index) in experiences "
+                 :key="exp.id">
+              <p class="item_title">{{ exp.title }}</p>
+              <p>{{ exp.company_name }}</p>
+              <p v-if="exp.description">
+                • {{ exp.description }}
+              </p>
+            </div>
+          </div>
+        </template>
 
-  </AboutItem>
+      </AboutItem>
 
-  <AboutItem>
-    <template #icon>
-      <CommunityIcon/>
-    </template>
-    <template #heading>Community</template>
-    <template #content>
-    <strong>Got stuck?</strong>
-    <p>Ask your question on:</p>
-    <a href="mailto:Ramfarha37@gmail.com" target="_blank" rel="noopener">E-mail:
-      Ramfarha37@gmail.com</a>
-    <a href="tel:+971585395308"> call: +971585395308</a>
-    <a href="https://x.com/" target="_blank" rel="noopener"
-    >X</a>
-    <a href="https://facebook/" target="_blank" rel="noopener">facebook</a>
-    <p>You should also follow the official
-      <a href="https://instegram/" target="_blank" rel="noopener">instagram</a></p>
-    </template>
-  </AboutItem>
+      <AboutItem v-if="skills.length > 0" class="skills item">
+        <template #icon>
+          <SkillsIcon/>
+        </template>
+        <template #heading>Skills</template>
+        <template #content>
+          <div class="content">
+            <div class="contentItem" v-for=" (s, index) in skills " :key="s.id">
+              <p class="item_title">• {{ s.title }}</p>
+              <p v-if="s.description">
+                {{ s.description }}
+              </p>
+            </div>
+          </div>
+        </template>
 
-  <AboutItem>
-    <template #icon>
-      <SupportIcon/>
-    </template>
-    <template #heading>Support Me</template>
-    <template #content>
-    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-    </template>
-  </AboutItem>
+      </AboutItem>
+
+      <AboutItem class="community item">
+        <template #icon>
+          <CommunityIcon/>
+        </template>
+        <template #heading>Community</template>
+        <template #content>
+          <div class="content">
+            <a :href=" `mailto:${details.email}` " target="_blank" rel="noopener">
+              <p class="item_title">• E-mail:</p>
+              {{ details.email }}</a>
+            <a href="tel:+971585395308">
+              <p class="item_title">• Call:</p>
+              {{ details.mobile }} </a>
+
+            <a class="contentItem" v-for="(sm , index) in social_media " :href="sm.url"
+               target="_blank" rel="noopener">
+              <p class="item_title">• {{ sm.title }} </p>
+              <i v-if="sm.description">{{ sm.description }}</i>
+            </a>
+          </div>
+        </template>
+      </AboutItem>
+    </section>
+
+  </main>
 </template>
+
+<style>
+
+.about {
+
+
+}
+
+.about .item {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 2px dashed var(--color-border);
+  border-radius: 5px;
+  padding: 40px 0;
+}
+
+
+.photo_container {
+  position: relative;
+  width: 100%;
+  border-radius: 0 0 110px 0;
+  padding-right: 2rem;
+}
+
+.cover_photo {
+
+  img {
+
+    width: 100%;
+    max-height: 400px;
+    border-radius: 60px 0;
+  }
+}
+
+.profile_photo {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  img {
+    margin-left: 10px;
+    margin-top: -80px;
+    width: 35%;
+    height: 100%;
+    border-radius: 30px;
+    box-shadow: 2px 2px 18px 1px black;
+  }
+
+  .bio_item {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 2px dashed var(--color-border);
+    border-radius: 5px;
+    padding: 40px 0;
+    color: var(--color-link);
+
+  }
+}
+
+.tex-shadow {
+
+  text-shadow: 4px 2px 30px rgba(50, 62, 69, 0.73);
+
+}
+
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contentItem {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  border-bottom: .5px solid var(--color-link);
+  width: fit-content;
+}
+
+.item_title {
+  font-family: "monospace", sans-serif;
+  font-weight: 700;
+}
+
+
+@media (min-width: 420px) {
+  .photo_container{
+    position: sticky;
+
+  }
+  .cover_photo {
+
+    img {
+
+      width: 100%;
+
+    }
+  }
+}
+
+
+@media (min-width: 760px) {
+
+  .cover_photo {
+    img {
+
+      width: 100%;
+      max-height: 500px;
+
+    }
+  }
+
+  .profile_photo{
+    flex-direction: row;
+    gap: 40px;
+
+    img{
+      max-height: 300px;
+
+    }
+    .bio_item {
+      padding-top: .5rem;
+      border-bottom: none;
+    }
+  }
+  .cv{
+    position: absolute;
+    top: 230px;
+    left: -188px;
+  }
+  .photo_container{
+    border-bottom: 1px solid var(--color-link);
+  }
+
+}
+
+@media (min-width: 895px) {
+
+}
+</style>

@@ -60,15 +60,15 @@ onMounted(async () => {
         <ul class="items" v-else>
           <li class="item" v-for="event in events" :key="event.id">
             <h3>{{ event.title }}</h3>
-            <i>- {{ event.description }}</i>
-            <i>- {{ event.location }}</i>
+            <i>{{ event.description }}</i>
+            <i>{{ event.location }}</i>
             <i class="date">{{ event.date }}</i>
             <nav class="buttons_nav">
-              <RouterLink :to="`/dashboard/events/${event.id}`">
+              <RouterLink class="pi_button" :to="`/dashboard/events/${event.id}`">
                 Edit
               </RouterLink>
               |
-              <button class="delete_button green" @click="handleDelete(event.id)">Delete</button>
+              <button class="pi_button green" @click="handleDelete(event.id)">Delete</button>
             </nav>
           </li>
         </ul>
@@ -96,7 +96,7 @@ onMounted(async () => {
   border-radius: 7px;
   gap: 1rem;
   padding: 1rem;
-  background: linear-gradient(rgba(140, 188, 188, 0.51), rgba(65, 103, 103, 0.76), rgba(88, 129, 129, 0.49), rgba(31, 81, 81, 0.15));
+  background: var(--color-background-mute);
 
   backdrop-filter: blur(15px);
   width: 100%;
@@ -134,19 +134,6 @@ onMounted(async () => {
 }
 
 
-.delete_button {
-  text-decoration: none;
-  border: none;
-  background: none;
-  transition: 0.4s;
-  padding: 3px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: hsl(180, 11%, 50%);
-    color: var(--vt-c-white);
-  }
-}
 
 @media ( min-width: 732px ) {
   .events-dashboard {

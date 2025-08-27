@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia';
 import { api, csrf } from '../lib/api';
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 export const useAuth = defineStore('auth',{
   state: ()=>({ user: null as any }),
@@ -19,6 +22,12 @@ export const useAuth = defineStore('auth',{
       this.user=data; },
 
     async logout(){
-      await api.post('/logout'); this.user=null; }
+      await api.post('/logout');
+      this.user=null;
+      await router.push('/home')
+      window.document.location.reload();
+
+    }
+
   }
 });

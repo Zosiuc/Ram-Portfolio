@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {api} from "@/lib/api.ts"
-import DateTimeFormat = Intl.DateTimeFormat;
-import {format} from "pathe";
+
 
 const imagURL = import.meta.env.VITE_API_URL + '/storage/'
+const loading = ref<boolean>(true);
+let upcomingEvents = ref()
 const events = ref<{
   id: number,
   title: string,
@@ -18,6 +19,7 @@ const events = ref<{
   }[]
 }[]>();
 
+
 function convertYoutube(url: string) {
   const reg = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
   const match = url.match(reg);
@@ -29,6 +31,11 @@ onMounted(async () => {
   try {
     const {data} = await api.get('/events')
     events.value = data.data
+
+    loading.value = false
+    upcomingEvents = computed(() =>
+      events.value?.filter((e:any) => new Date(e.date).getTime() > Date.now())
+    );
   } catch (err) {
     console.log(err);
   }
@@ -38,14 +45,23 @@ onMounted(async () => {
 </script>
 
 <template>
-
-  <main class="events">
-    <div class="event" v-for="event in events" :key="event.id">
+  <main v-if="loading" class="loading">
+    <h2 > Prepare data ...  </h2>
+  </main>
+  <main v-else class="main events">
+    <div class="event" v-for="event in upcomingEvents" :key="event.id">
       <div class="event_header">
         <h3>{{ event.title }}</h3>
         <i>{{ event.description }}</i>
-        <i>{{ event.location}}</i>
-        <i>{{ event.date}}</i>
+        <p>{{ event.location}}</p>
+        <i>{{ new Date(event.date).toLocaleString("en", {
+          weekday: "long",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        }) }}</i>
       </div>
 
       <div class="media">
@@ -86,18 +102,18 @@ onMounted(async () => {
 <style scoped>
 
 .events {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
+
+
 }
 
 .event {
   display: flex;
   flex-direction: column;
-  border-bottom: 2px solid #e4e4e4;
+  padding: 2rem;
+  border-bottom: 2px solid var(--color-border);
   border-radius: 5px;
   gap: 1rem;
-  background-color: rgba(218, 227, 227, 0.1);
+  background-color: var(--color-background-soft-blur);
 }
 
 .event_header {
