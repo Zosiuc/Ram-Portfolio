@@ -3,6 +3,7 @@ import {onMounted, onUpdated, nextTick, watch, ref} from "vue";
 import {api} from "@/lib/api.js";
 
 const loading = ref<boolean>(true);
+const empty = ref<boolean>(false);
 
 interface Reel {
   url: string;
@@ -68,6 +69,8 @@ onMounted(async () => {
     loading.value = false;
 
   } catch (err) {
+    loading.value = false;
+    empty.value = true;
     console.log(err);
   }
 })
@@ -77,6 +80,9 @@ onMounted(async () => {
 <template>
   <main v-if="loading" class="loading">
     <h2 > Prepare data ...  </h2>
+  </main>
+  <main v-if="empty" class="loading">
+    <h2> <router-link to="dashboard/profile">Let's build your portfolio!</router-link> </h2>
   </main>
   <main v-else class="main reels">
     <div v-for="(reel, index) in reels " :key="index" class="instagram-video-wrapper">

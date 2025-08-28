@@ -49,10 +49,17 @@ const router = createRouter({
   routes
 });
 
+// ⬅ hier hoort de beforeEach guard
 router.beforeEach(async (to, from, next) => {
   const auth = useAuth();
+
   if (to.meta.auth && !auth.user) {
-    try { await auth.me(); next(); } catch { next('/login'); }
+    try {
+      await auth.me();
+      next(); // als gebruiker ingelogd is
+    } catch {
+      next({ path: '/login', query: { redirect: to.fullPath } });
+    }
   } else {
     next();
   }

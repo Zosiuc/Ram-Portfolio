@@ -18,8 +18,10 @@ const error = ref("");
 async function submit() {
   try {
     await auth.login(email.value, password.value);
+    // redirect ophalen (als iemand bv. /dashboard/events probeerde te openen)
+    const redirect = router.currentRoute.value.query.redirect as string || '/dashboard';
+    await router.push(redirect);
     console.log("Ingelogde gebruiker:", auth.user);
-    await router.push("/dashboard");
 
   } catch (e: any) {
     error.value = e ||"Login failed";

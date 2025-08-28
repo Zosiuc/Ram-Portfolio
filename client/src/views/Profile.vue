@@ -5,10 +5,10 @@ import {useRouter} from "vue-router";
 import {useAuth} from "@/stores/auth.ts";
 
 
-const router = useRouter();
 const auth = useAuth();
 
 const imgURL = import.meta.env.VITE_API_URL + "/";
+
 
 // Types
 interface Education {
@@ -275,7 +275,7 @@ const submit = async () => {
     }
     formData.append('_method', 'PUT')
 
-    const res = await api.post(`/user-metas/${auth.user.id}`, formData, {
+   await api.post(`/user-metas/${auth.user.id}`, formData, {
       headers: {"Content-Type": "multipart/form-data"}
     })
     msg.value = {text: "Saved successfully!", status: true};
@@ -293,7 +293,7 @@ const submit = async () => {
       <h2>Cover</h2>
 
       <div class="cover-photo">
-        <img :src="cover_photo ? getPreview(cover_photo) : '/youtubeCover.png' " alt="cover-photo"/>
+        <img :src=" cover_photo ? getPreview(cover_photo) : '/theatre1.png' " alt="cover-photo"/>
       </div>
       <!-- upload nieuw bestand -->
       <label class="upload-container upload-button">
@@ -307,7 +307,7 @@ const submit = async () => {
     <section class="form ">
       <h2>Profile</h2>
       <div class="profile-photo">
-        <img :src="profile_photo ? getPreview(profile_photo) : '/youtubeCover.png' "
+        <img :src=" profile_photo ? getPreview(profile_photo) : '/profile.png' "
              alt="profile photo"/>
       </div>
       <!-- upload nieuw bestand -->
@@ -493,7 +493,9 @@ const submit = async () => {
       </div>
       <button @click="addItem('reel')" type="button" class="pro_button"> Add</button>
     </section>
-
+    <p v-if="msg.text" :class=" msg.status ? `success` : `fout` " >
+      {{ msg.text }}
+    </p>
     <button type="submit"  class="button"> Save</button>
   </form>
 </template>
@@ -598,5 +600,20 @@ const submit = async () => {
   width: 180px;
   place-self: center;
   font-size: small;
+}
+.success, .fout{
+  display: flex;
+  place-items: center;
+  place-content: center;
+}
+
+.success {
+  background-color: #98e398;
+  color: var(--color-text-button-2);
+}
+
+.fout {
+  background-color: #dc7777;
+
 }
 </style>

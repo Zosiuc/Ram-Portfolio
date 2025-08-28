@@ -1,11 +1,11 @@
 <template>
-  <main class="analytics">
-    <h1 class="text-2xl font-bold mb-4">Analytics</h1>
+  <section class="analytics">
+    <h1 class="">Analytics</h1>
     <div class="canvas">
       <LineChart  :data="chartData" />
     </div>
 
-  </main>
+  </section>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
@@ -44,19 +44,32 @@ onMounted(async () => {
 
 </script>
 <style  scoped>
-.analytics{
+.analytics {
   display: flex;
   flex-direction: column;
   align-items: center;
   max-height: 500px;
-  width: 80vw;
-  gap:2rem
+  gap:2rem;
+
+  h1 {
+    font-size: x-large;
+  }
 }
+
 .canvas{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+
+
+  canvas{
+    background-color: var(--color-background-soft-blur);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: .2rem;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+  }
+
+
 }
 </style>

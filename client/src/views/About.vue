@@ -10,7 +10,7 @@ import {api} from '@/lib/api.ts'
 
 const imgURL = import.meta.env.VITE_API_URL + "/";
 const loading = ref<boolean>(true);
-
+const empty = ref<boolean>(false);
 // Types
 interface Education {
   id: string;
@@ -113,6 +113,8 @@ onMounted(async () => {
     loading.value = false
 
   } catch (err: any) {
+    loading.value = false
+    empty.value = true
     console.log(err.response?.data)
   }
 
@@ -126,10 +128,10 @@ onMounted(async () => {
   <main v-else class="about">
     <section class="photo_container">
       <div class="cover_photo">
-        <img :src="imgURL +'storage/'+details.cover_photo " alt="cover-photo"/>
+        <img :src="details.cover_photo? imgURL +'storage/'+details.cover_photo : '/theatre1.png' " alt="cover-photo"/>
       </div>
       <div class="profile_photo">
-        <img :src="imgURL +'storage/'+details.profile_photo " alt="profile-photo"/>
+        <img :src="details.profile_photo ? imgURL +'storage/'+details.profile_photo : '/profile.png' " alt="profile-photo"/>
         <AboutItem v-if="bio" class="bio_item">
           <template #icon>
             <BioIcon/>
@@ -137,13 +139,15 @@ onMounted(async () => {
           <template #heading>BIO</template>
           <template #content>
             <i class="bio">"{{ bio }}"</i>
-            <a class="cv" href="/Ram_Farha.pdf" target="_blank">CV</a>
+            <a class="cv" href="/portfolio.pdf" target="_blank">Portfolio</a>
           </template>
         </AboutItem>
       </div>
     </section>
-
-    <section class="main">
+    <section v-if="empty" class="main">
+      <h2> <router-link to="dashboard/profile">Let's build your portfolio!</router-link> </h2>
+    </section>
+    <section v-else  class="main">
       <AboutItem v-if="education.length > 0" class="education item">
         <template #icon>
           <EducationIcon/>

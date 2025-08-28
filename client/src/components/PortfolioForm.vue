@@ -90,8 +90,8 @@ const submit = async () => {
         {{ msg.text }}
       </p>
       <div class="buttons_wrapper">
-        <button class="button" type="submit"> submit </button>
         <RouterLink class="back" to="/dashboard/portfolio" ><strong>Back</strong></RouterLink>
+        <button class="button" type="submit"> submit </button>
       </div>
     </form>
   </div>
@@ -139,6 +139,7 @@ const submit = async () => {
 .buttons_wrapper {
   display: flex;
   flex-direction: row;
+  padding: 0 20px;
   margin-top: 40px;
   justify-content: space-between;
 }
@@ -156,14 +157,8 @@ const submit = async () => {
 }
 
 @media (min-width: 450px) {
-  .portfolio-form{
-    justify-content: center;
-    align-items: center;
-  }
-  .form-inputs {
-    width: 50%;
 
-  }
+
 }
 
 </style>

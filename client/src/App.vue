@@ -3,9 +3,17 @@ import { RouterLink, RouterView } from 'vue-router'
 
 import { useAuth } from "@/stores/auth";
 import Logout from "@/components/Logout.vue";
+import {onMounted} from "vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const auth = useAuth();
 
+onMounted(() => {
+  if (auth.user) {
+    router.push('/dashboard');
+  }
+});
 
 
 
@@ -73,7 +81,6 @@ header {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 90px;
 
 }
 .visitor_nav {
@@ -116,7 +123,7 @@ footer {
   display: flex;
   flex-direction: column;
   width: 120px;
-  height: 70px;
+  height: 53px;
   overflow: hidden;
   position: relative;
 

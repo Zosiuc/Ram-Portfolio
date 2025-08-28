@@ -20,8 +20,8 @@ import {RouterLink, RouterView} from "vue-router";
 .main_dashboard {
   display: flex;
   flex-direction: column;
-  margin-bottom: 30px;
-  height: 100%;
+  min-height: 100lvh;
+  width: 100vw;
 
 
 }
@@ -32,7 +32,7 @@ import {RouterLink, RouterView} from "vue-router";
   flex-direction: row;
   align-items: end;
   position: fixed;
-  bottom: 92px;
+  bottom: 76px;
   left: 0;
   gap: 1rem;
   padding: 1rem .5rem;
@@ -68,10 +68,11 @@ import {RouterLink, RouterView} from "vue-router";
   margin-top: 4rem;
 }
 
-@media (min-width: 420px) {
+@media (min-width: 520px) {
 
   .main_dashboard {
     flex-direction: row;
+
 
   }
 

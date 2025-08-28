@@ -2,6 +2,7 @@
 import {computed, onMounted, ref} from "vue";
 import {api} from "@/lib/api.ts"
 
+const empty = ref<boolean>(false);
 
 const imagURL = import.meta.env.VITE_API_URL + '/storage/'
 const loading = ref<boolean>(true);
@@ -37,6 +38,8 @@ onMounted(async () => {
       events.value?.filter((e:any) => new Date(e.date).getTime() > Date.now())
     );
   } catch (err) {
+    loading.value = false
+    empty.value = true;
     console.log(err);
   }
 })
@@ -47,6 +50,10 @@ onMounted(async () => {
 <template>
   <main v-if="loading" class="loading">
     <h2 > Prepare data ...  </h2>
+  </main>
+  <main v-if="empty" class="">
+    <img src="/favicon.ico" alt="logo" class="logo" />
+    <h2> No upcoming events right now !  </h2>
   </main>
   <main v-else class="main events">
     <div class="event" v-for="event in upcomingEvents" :key="event.id">

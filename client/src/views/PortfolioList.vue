@@ -48,7 +48,7 @@ const scrollToView = () => {
 
 onMounted(async () => {
   try {
-    const {data} = await api.get("/portfolio")
+    const {data} = await api.get("/portfolio_items")
     // als je paginate gebruikt:
     // items.value = res.data.data
     items.value = data.data

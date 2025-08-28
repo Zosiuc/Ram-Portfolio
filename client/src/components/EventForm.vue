@@ -17,11 +17,12 @@ const msg = ref({
 })
 
 const form = ref({
+  id:'',
   title:'',
   description:'',
   location: '',
   date: '',
-  media: [] as { type: string, file?: File, url?: string }[]
+  media: [] as { id?:'',type: string, file?: File, url?: string }[]
 })
 
 watch(() => msg.value.text, (newVal) => {
@@ -58,12 +59,12 @@ onMounted(async () => {
           type: m.media_type,
           url: m.media_url,
           file: undefined
-
         }))
       } else {
         form.value.media = [] // geen media → lege array
       }
-      console.log("event:", form.value)
+
+      console.log("database media:", form.value)
     } catch (err: any) {
       console.error("API error:", err)
       msg.value.status = false
@@ -75,16 +76,25 @@ onMounted(async () => {
 const submit = async () => {
   const formData = new FormData()
   formData.append('title', form.value.title)
-  formData.append('description', form.value.description)
-  formData.append('location', form.value.location)
+  formData.append('description', form.value.description ?? '')
+  formData.append('location', form.value.location ?? '')
   formData.append('date', form.value.date)
-  form.value.media.forEach((m, index) => {
+  form.value.media.map((m, index) => {
+
+    if (m.id) {
+      formData.append(`media[${index}][id]`, m.id)
+    }
     formData.append(`media[${index}][media_type]`, m.type)
     if (m.type === 'image' && m.file) {
       formData.append(`media[${index}][file]`, m.file)
-    } else if (m.type === 'video' && m.url) {
+    } else if (m.type === 'image' && m.url) {
+      // bestaand bestand behouden
       formData.append(`media[${index}][url]`, m.url)
     }
+    if (m.type === 'video' && m.url) {
+      formData.append(`media[${index}][url]`, m.url)
+    }
+
   })
 
   try {
@@ -92,11 +102,12 @@ const submit = async () => {
     let res
     if (props.id) {
       formData.append('_method', 'PUT')
+      console.log("pre sup: ",form.value)
       //  bijwerken
       res = await api.post(`/events/${props.id}`, formData)
     } else {
       //  nieuw item
-      console.log(form.value)
+      console.log("pre sup: ",form.value)
       res = await api.post('/events', formData)
       form.value.title = '';
       form.value.description = '';
@@ -132,7 +143,7 @@ const submit = async () => {
     <h2 class="heading" > {{props.heading}}</h2>
     <form @submit.prevent="submit" class="form-inputs">
       <label v-if="props.id">Title:</label>
-      <input v-model="form.title" type="text" placeholder="Title"/>
+      <input v-model="form.title" type="text" placeholder="Title" required/>
       <label v-if="props.id">Description:</label>
       <textarea class="description" v-model="form.description" type="" placeholder="Description " />
       <div class="description">
@@ -142,16 +153,18 @@ const submit = async () => {
           type="datetime-local"
           v-model="form.date"
           class="date"
+          required
         />
       </div>
       <label for="location">Location:</label>
       <textarea id="location" class="description" v-model="form.location" type="" placeholder="Location " />
 
       <div v-for="(m, index) in form.media" :key="index" class="media">
-        <select v-if="form.media"  v-model="m.type" class="ipt">
+        <!-- Media type select -->
+        <select v-model="m.type" class="ipt">
           <option value="image">Image</option>
           <option value="video">Video</option>
-        </select >
+        </select>
 
         <!-- Als het een image is -->
         <div v-if="m.type === 'image'" class="image-input">
@@ -159,16 +172,16 @@ const submit = async () => {
 
           <!-- preview database image -->
           <div v-if="!m.file && m.url" class="previewImage">
-            <img :src="imagURL+'storage/'+m.url" alt="subject image" class="image" />
-            <button class="upload-button" type="button" @click="m.file = undefined; m.url = ''">
-              Replace image
+            <img :src="imagURL + m.url" alt="subject image" class="image" />
+            <button class="upload-button" type="button" @click=" form.media.splice(index,1) " >
+              Remove
             </button>
           </div>
 
           <!-- preview nieuwe file -->
           <div v-else-if="m.file" class="previewImage">
             <img :src="getPreview(m.file)" alt="preview" class="image" />
-            <button class="upload-button" type="button" @click="m.file = undefined">
+            <button class="upload-button" type="button" @click="form.media.splice(index,1)">
               Remove
             </button>
           </div>
@@ -176,26 +189,33 @@ const submit = async () => {
           <!-- upload nieuw bestand -->
           <label v-else class="upload-container upload-button">
             upload an image
-            <input type="file" accept="image/*" class="hidden" @change="(e:any) => m.file = e.target.files[0]" />
+            <input type="file" accept="image/*" multiple class="hidden" @change="(e:any) => {
+              Array.from(e.target.files as FileList).forEach((file) => {
+                form.media.push({type:'image', file:file} )
+              })
+
+            }" />
           </label>
         </div>
 
-
-        <!-- Als het een video is -->
+        <!-- VIDEO MEDIA -->
         <div v-if="m.type === 'video'" class="upload-container">
-          <label for="video" >subject video: </label>
-          <input id="video" v-model="m.url" type="text" placeholder="YouTube URL" />
+          <label>Subject video:</label>
+          <input type="text" v-model="m.url" placeholder="YouTube URL"/>
+          <button type="button" class="upload-button" @click="m.url = ''">Remove video</button>
         </div>
       </div>
 
-      <button class="button" type="button" @click="addMedia">+ Add Media</button>
-
-      <p v-if="msg.text" :class=" msg.status ? `success` : `fout` " >
+      <!-- Voeg nieuw media blok toe -->
+      <button type="button" class="button" @click="addMedia ">
+        + Add Media
+      </button>
+      <p v-if="msg.text" :class=" msg.status ? `success` : `fout` ">
         {{ msg.text }}
       </p>
       <div class="buttons_wrapper">
+        <RouterLink class="back" to="/dashboard/events" ><strong>Back</strong></RouterLink>
         <button class="button" type="submit"> submit </button>
-        <RouterLink class="back" to="/dashboard/portfolio" ><strong>Back</strong></RouterLink>
       </div>
     </form>
   </div>
@@ -262,7 +282,7 @@ const submit = async () => {
   width: 100%;
 }
 .image {
-  width: 50%;
+
 
 }
 
@@ -302,6 +322,7 @@ const submit = async () => {
   display: flex;
   flex-direction: row;
   margin-top: 40px;
+  padding: 0 20px;
   justify-content: space-between;
 }
 

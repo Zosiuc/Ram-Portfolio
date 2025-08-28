@@ -5,10 +5,11 @@ import Hero from "@/components/Hero.vue";
 import {useAuth} from "@/stores/auth.ts";
 const logo = ref('/logo.png')
 const imagURL = import.meta.env.VITE_API_URL + '/storage/'
+
 const loading = ref<boolean>(true);
+const empty = ref<boolean>(false)
 
 const auth = useAuth();
-const open = ref(false)
 const admin = ref({
   first_name:'',
   job_title:""
@@ -16,11 +17,16 @@ const admin = ref({
 
 
 onMounted(async () => {
-  const {data} = await api.get(`/user-metas/1`)
-  admin.value.first_name = data.first_name
-  admin.value.job_title = data.job_title
-  loading.value = false
-
+  try {
+    const {data} = await api.get(`/user-metas/1`)
+    admin.value.first_name = data.first_name
+    admin.value.job_title = data.job_title
+    loading.value = false
+  }catch(err: any) {
+    loading.value = false;
+    empty.value = true
+    console.log(err)
+  }
 });
 
 const portfolio = ref<{
@@ -61,10 +67,12 @@ function convertYoutube(url: string) {
 
 onMounted(async () => {
   try {
-    const {data} = await api.get('/portfolio')
+    const {data} = await api.get('/portfolio_items')
     portfolio.value = data.data
     loading.value = false
   } catch (err) {
+    loading.value = false
+    empty.value = true;
     console.log(err);
   }
 })
@@ -86,6 +94,9 @@ onMounted(async () => {
 <template>
   <main v-if="loading" class="loading">
     <h2> Prepare data ... </h2>
+  </main>
+  <main v-if="empty" class="loading">
+    <h2> <router-link to="dashboard/portfolio">Let's build your portfolio!</router-link> </h2>
   </main>
   <main v-else class=" main portfolio_items">
     <div v-if="!auth.user" class="wrapper">
@@ -143,11 +154,11 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="portfolio_item">
+    <div v-if="events?.filter((e:any) => new Date(e.date).getTime() < Date.now())" class="portfolio_item">
       <div class="portfolio_item_header">
         <h2>Work experiences</h2>
       </div>
-      <div class="subjects">
+      <div  class="subjects">
         <div  v-for="event in events?.filter((e:any) => new Date(e.date).getTime() < Date.now())" :key="event.id">
           <div class="subject_item">
             <h3 class="subject_title">{{ event.title }}</h3>

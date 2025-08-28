@@ -4,12 +4,13 @@ import {useRouter} from "vue-router";
 
 const router = useRouter()
 
+
 export const useAuth = defineStore('auth',{
   state: ()=>({ user: null as any }),
   actions: {
 
     async login(email:string, password:string){
-      await csrf();
+
       const { data } = await api.post('/login', {
         email: email,
         password: password
@@ -24,7 +25,6 @@ export const useAuth = defineStore('auth',{
     async logout(){
       await api.post('/logout');
       this.user=null;
-      await router.push('/home')
       window.document.location.reload();
 
     }
