@@ -10,7 +10,7 @@ export const useAuth = defineStore('auth',{
   actions: {
 
     async login(email:string, password:string){
-
+      await csrf();
       const { data } = await api.post('/login', {
         email: email,
         password: password
@@ -23,6 +23,7 @@ export const useAuth = defineStore('auth',{
       this.user=data; },
 
     async logout(){
+      await csrf();
       await api.post('/logout');
       this.user=null;
       window.document.location.reload();
