@@ -129,7 +129,7 @@ const submit = async () => {
     msg.value = {text: "Saved successfully!", status: true}
   } catch (err: any) {
     msg.value = {text: `Error saving subject\n${err}`, status: false}
-    console.error(err.response?.data)
+    console.error(err)
   }
 }
 </script>
