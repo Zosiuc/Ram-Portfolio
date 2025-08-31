@@ -234,7 +234,7 @@ onMounted(async () => {
 <style>
 
 .about {
-padding-top: 40px;
+
 
 }
 

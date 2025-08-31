@@ -275,13 +275,11 @@ const submit = async () => {
     }
     formData.append('_method', 'PUT')
 
-   await api.post(`/user-metas/${auth.user.id}`, formData, {
-      headers: {"Content-Type": "multipart/form-data"}
-    })
+   await api.post(`/user-metas/${auth.user.id}`, formData)
     msg.value = {text: "Saved successfully!", status: true};
   } catch (err: any) {
     msg.value = {text: `Error saving\n${err}`, status: false};
-    console.error(err.response?.data);
+    console.error(err);
   }
 };
 </script>
