@@ -30,7 +30,7 @@ async function submit() {
 </script>
 
 <template>
-  <main class="login-container ">
+  <div class="login-container ">
     <div  class="wrapper">
       <img alt="logo" class="logo " src="/logo.png"  />
     </div>
@@ -42,18 +42,20 @@ async function submit() {
 
       <p v-if="error" class="error">{{ error }}</p>
     </div>
-  </main>
+  </div>
 </template>
 
 <style>
 .login-container{
-  background-color: var(--color-border);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  background-color: var(--color-border);
+  justify-content: start;
   align-items: center;
-  width: 90vw;
+  gap: 10px;
+  padding: 2rem;
+  width: 100vw;
   height: 100vh;
-  gap: 20px;
 }
 .wrapper{
   display: flex;
@@ -63,8 +65,8 @@ async function submit() {
 }
 .logo {
   display: block;
-  margin: 0 auto 2rem;
-  max-height: 300px;
+  margin: 0 auto;
+  max-height: 350px;
 }
 
 .login {

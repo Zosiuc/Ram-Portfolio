@@ -27,7 +27,6 @@ export const useAuth = defineStore('auth',{
       await api.post('/logout');
       this.user=null;
       window.document.location.reload();
-
     }
 
   }

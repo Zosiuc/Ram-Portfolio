@@ -31,7 +31,7 @@ onMounted(() => {
     </nav>
 
   </header>
-  <div :class="auth.user ? 'admin_view' : '' ">
+  <div class="admin_view">
     <RouterView />
   </div>
 
@@ -59,7 +59,7 @@ header {
 
 .nav{
   width: 100%;
-  min-height: 2.5rem;
+  min-height: 3rem;
   text-align: center;
 
   place-content: center;
@@ -79,13 +79,10 @@ header {
 .admin_view{
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 
 }
-.visitor_nav {
 
-}
 
 nav a.router-link-exact-active {
   color: var(--color-text-1);

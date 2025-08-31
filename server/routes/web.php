@@ -14,7 +14,6 @@ use App\Http\Controllers\{AnalyticsController,
     SubjectController,
     SubjectMediaController,
     UserMetaController};
-use App\Models\SubjectMedia;
 use Illuminate\Support\Facades\Route;
 
 

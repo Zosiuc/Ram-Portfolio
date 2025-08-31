@@ -234,7 +234,7 @@ onMounted(async () => {
 <style>
 
 .about {
-
+padding-top: 40px;
 
 }
 
@@ -249,9 +249,8 @@ onMounted(async () => {
 
 .photo_container {
   position: relative;
-  width: 100%;
+  width: 88vw;
   border-radius: 0 0 110px 0;
-  padding-right: 2rem;
 }
 
 .cover_photo {
