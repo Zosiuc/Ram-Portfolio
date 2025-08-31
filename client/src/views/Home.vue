@@ -241,6 +241,7 @@ onMounted(async () => {
   border-bottom: 4px double var(--color-border);
   border-radius: 5px;
   gap: 1rem;
+  width: 100%;
 }
 
 .portfolio_item_header {
