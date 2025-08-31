@@ -38,7 +38,6 @@ import {RouterLink, RouterView} from "vue-router";
   padding: 1rem .5rem;
   backdrop-filter: blur(15px);
   background-color: var(--color-background-mute);
-
   width: 100%;
 }
 
