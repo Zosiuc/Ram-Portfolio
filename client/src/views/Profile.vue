@@ -51,13 +51,20 @@ const profile_photo = ref<File | string>();
 
 const bio = ref("");
 const educationBio = ref("")
-const details = ref({
-  job_title: "",
-  first_name: "",
-  last_name: "",
-  email: "",
-  mobile: "",
-  birthday: "",
+const details = ref<{
+  job_title: string |null,
+  first_name: string |null,
+  last_name: string |null,
+  email: string |null,
+  mobile: string |null,
+  birthday: string |null,
+}>({
+  job_title: null,
+  first_name: null,
+  last_name: null,
+  email: null,
+  mobile: null,
+  birthday: null,
 });
 
 const education = ref<Education[]>([]);
@@ -84,14 +91,14 @@ onMounted(async () => {
     bio.value = data.bio;
     educationBio.value = data.education_bio;
 
-    Object.assign(details.value, {
+    details.value = {
       job_title: data.job_title,
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
       mobile: data.number,
       birthday: data.birthday,
-    });
+    };
 
     education.value = Array.isArray(data.education)
       ? mapArray<Education>(data.education, [
@@ -220,12 +227,12 @@ const submit = async () => {
     const formData = new FormData()
     formData.append('bio', bio.value)
     formData.append('education_bio', educationBio.value)
-    formData.append('job_title', details.value.job_title)
-    formData.append('first_name', details.value.first_name)
-    formData.append('last_name', details.value.last_name)
-    formData.append('birthday', details.value.birthday)
-    formData.append('number', details.value.mobile)
-    formData.append('email', details.value.email)
+    formData.append('job_title', details.value.job_title ?? "" )
+    formData.append('first_name', details.value.first_name ?? "" )
+    formData.append('last_name', details.value.last_name ?? "" )
+    formData.append('birthday', details.value.birthday ?? "" )
+    formData.append('number', details.value.mobile ?? "" )
+    formData.append('email', details.value.email ?? "" )
 
     if (profile_photo.value instanceof File) {
       formData.append("profile_photo", profile_photo.value)
@@ -328,32 +335,32 @@ const submit = async () => {
       <div class="veld raed_only">
         <label for="job_title">Job Title: </label>
         <input id="job_title" type="text" class="veld_input" placeholder="Separated with  ' | '  "
-               v-model="details.job_title" required/>
+               v-model="details?.job_title" required/>
       </div>
       <div class="veld raed_only">
         <label for="first_name">First name: </label>
         <input id="first_name" type="text" class="veld_input" placeholder="What is your first name?"
-               v-model="details.first_name" required/>
+               v-model="details?.first_name" required/>
       </div>
       <div class="veld raed_only">
         <label for="last_name">Last name: </label>
         <input id="last_name" type="text" class="veld_input" placeholder="What is your last name?"
-               v-model="details.last_name" required/>
+               v-model="details?.last_name" required/>
       </div>
       <div class="veld raed_only">
         <label for="birthday">Date of birth: </label>
         <input id="birthday" type="date" class="veld_input" placeholder="When is your birthday?"
-               v-model="details.birthday"/>
+               v-model="details?.birthday"/>
       </div>
       <div class="veld raed_only">
         <label for="email">Email: </label>
-        <input id="email" type="text" class="veld_input" placeholder="What is your email address?"
-               v-model="details.email"/>
+        <input id="email" type="email" class="veld_input" placeholder="What is your email address?"
+               v-model="details?.email"/>
       </div>
       <div class="veld raed_only">
         <label for="mobile">Mobile: </label>
         <input id="mobile" type="text" class="veld_input" placeholder="What is your mobile number?"
-               v-model="details.mobile"/>
+               v-model="details?.mobile"/>
       </div>
     </section>
 
