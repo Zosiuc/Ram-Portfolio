@@ -63,7 +63,7 @@ const mapArray = <T>(arr: any[], keys: (keyof T)[]): T[] =>
 onMounted(async () => {
   try {
 
-    const {data} = await api.get('/user-metas/1',{withCredentials:false})
+    const {data} = await api.get('/user-metas/1')
 
     Object.assign(details.value, {
       first_name: data.first_name,

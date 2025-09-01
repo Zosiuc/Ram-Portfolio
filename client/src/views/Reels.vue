@@ -59,7 +59,7 @@ const reels = ref<{
 
 onMounted(async () => {
   try {
-    const {data} = await api.get('/user-metas/1',{withCredentials:false})
+    const {data} = await api.get('/user-metas/1')
     reels.value = data.reels
     reels.value.map((obj) => {
       obj.url = obj.url.replace("https://www.instagram.com/reel/", "https://www.instagram.com/p/");

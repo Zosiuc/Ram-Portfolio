@@ -78,7 +78,7 @@ const mapArray = <T>(arr: any[], keys: (keyof T)[]): T[] =>
 onMounted(async () => {
   try {
     await csrf();
-    const {data} = await api.get(`/user-metas/${auth.user.id}`,{withCredentials:false});
+    const {data} = await api.get(`/user-metas/${auth.user.id}`);
 
     cover_photo.value = data.cover_photo;
     profile_photo.value = data.profile_photo;

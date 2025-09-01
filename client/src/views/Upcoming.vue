@@ -30,7 +30,7 @@ function convertYoutube(url: string) {
 
 onMounted(async () => {
   try {
-    const {data} = await api.get('/events',{withCredentials:false})
+    const {data} = await api.get('/events')
     events.value = data.data
     loading.value = false
     if (data.data.length === 0) {empty.value = true;}

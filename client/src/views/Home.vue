@@ -18,7 +18,7 @@ const admin = ref({
 
 onMounted(async () => {
   try {
-    const {data} = await api.get(`/user-metas/1`,{withCredentials:false})
+    const {data} = await api.get(`/user-metas/1`)
     admin.value.first_name = data.first_name
     admin.value.job_title = data.job_title
     loading.value = false
