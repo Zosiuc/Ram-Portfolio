@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import { onMounted, ref} from "vue";
 import {api} from "@/lib/api.ts"
 import Hero from "@/components/Hero.vue";
 import {useAuth} from "@/stores/auth.ts";
@@ -22,6 +22,7 @@ onMounted(async () => {
     admin.value.first_name = data.first_name
     admin.value.job_title = data.job_title
     loading.value = false
+
   }catch(err: any) {
     loading.value = false;
     empty.value = true

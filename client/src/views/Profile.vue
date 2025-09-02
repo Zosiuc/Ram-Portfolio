@@ -217,8 +217,9 @@ watch(
 const submit = async () => {
   try {
     const formData = new FormData()
-    formData.append('bio', bio.value)
-    formData.append('education_bio', educationBio.value)
+    formData.append('id', auth.user.id)
+    formData.append('bio', bio.value ?? "")
+    formData.append('education_bio', educationBio.value ?? "")
     formData.append('job_title', details.value?.job_title ?? "" )
     formData.append('first_name', details.value?.first_name ?? "" )
     formData.append('last_name', details.value?.last_name ?? "" )
