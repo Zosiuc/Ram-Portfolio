@@ -173,7 +173,7 @@ class UserMetaController extends Controller
         foreach ($request->input('education', []) as $edu) {
             $attributes = ['user_meta_id' => $user_meta->id];
             if (!empty($edu['id'])) {
-                $attributes['education_id'] = $edu['id'];
+                $attributes['id'] = $edu['id']; // ✅ juist veld
             }
             $user_meta->education()->updateOrCreate(
                 $attributes,
@@ -187,46 +187,34 @@ class UserMetaController extends Controller
             if (!empty($ex['id'])) {
                 $attributes['id'] = $ex['id'];
             }
-            $user_meta->experience()->updateOrCreate(
-                $attributes,
-                $ex
-            );
+            $user_meta->experience()->updateOrCreate($attributes, $ex);
         }
 
         // Skills
         foreach ($request->input('skills', []) as $skill) {
             $attributes = ['user_meta_id' => $user_meta->id];
-            if(!empty($skill['id'])){
+            if (!empty($skill['id'])) {
                 $attributes['id'] = $skill['id'];
             }
-            $user_meta->skills()->updateOrCreate(
-                $attributes,
-                $skill
-            );
+            $user_meta->skills()->updateOrCreate($attributes, $skill);
         }
 
         // Social Media
         foreach ($request->input('social_media', []) as $sm) {
             $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($sm['id'])){
+            if (!empty($sm['id'])) {
                 $attributes['id'] = $sm['id'];
             }
-            $user_meta->socialMedia()->updateOrCreate(
-               $attributes,
-                $sm
-            );
+            $user_meta->socialMedia()->updateOrCreate($attributes, $sm);
         }
 
         // Reels
         foreach ($request->input('reels', []) as $reel) {
             $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($reel['id'])){
+            if (!empty($reel['id'])) {
                 $attributes['id'] = $reel['id'];
             }
-            $user_meta->reels()->updateOrCreate(
-                $attributes,
-                $reel
-            );
+            $user_meta->reels()->updateOrCreate($attributes, $reel);
         }
 
         return response()->json(

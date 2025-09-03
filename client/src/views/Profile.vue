@@ -276,8 +276,9 @@ const submit = async () => {
     if (auth.user.id) {
       await api.post(`/user-metas/${auth.user.id}`, formData)
       msg.value = {text: "Saved successfully!", status: true};
+    }else {
+      await api.post(`/user-metas`, formData)
     }
-    await api.post(`/user-metas`, formData)
     msg.value = {text: "Saved successfully!", status: true};
   } catch (err: any) {
     msg.value = {text: `Error saving\n${err}`, status: false};
