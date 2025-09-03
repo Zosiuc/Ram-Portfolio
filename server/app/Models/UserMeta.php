@@ -13,27 +13,27 @@ class UserMeta extends Model
 
     public function education()
     {
-        return $this->hasMany(Education::class);
+        return $this->hasMany(Education::class,'user_meta_id');
     }
 
     public function experience()
     {
-        return $this->hasMany(Experience::class);
+        return $this->hasMany(Experience::class,'user_meta_id');
     }
 
     public function skills()
     {
-        return $this->hasMany(Skill::class);
+        return $this->hasMany(Skill::class,'user_meta_id');
     }
 
     public function socialMedia()
     {
-        return $this->hasMany(SocialMedia::class);
+        return $this->hasMany(SocialMedia::class,'user_meta_id');
     }
 
     public function reels()
     {
-        return $this->hasMany(Reel::class);
+        return $this->hasMany(Reel::class,'user_meta_id');
     }
 
 }

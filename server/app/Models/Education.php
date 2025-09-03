@@ -13,6 +13,6 @@ class Education extends Model
 
     public function user_meta()
     {
-        return $this->belongsTo(UserMeta::class);
+        return $this->belongsTo(UserMeta::class, 'user_meta_id');
     }
 }

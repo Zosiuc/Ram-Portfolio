@@ -234,14 +234,14 @@ const submit = async () => {
       formData.append("cover_photo", cover_photo.value)
     }
     education.value.map((e, index) => {
-      formData.append(`education[${index}][id]`, e.id)
+      formData.append(`education[${index}][id]`, e.id ?? "")
       formData.append(`education[${index}][title]`, e.title)
       formData.append(`education[${index}][description]`, e.description)
       formData.append(`education[${index}][start_date]`, e.start_date)
       formData.append(`education[${index}][end_date]`, e.end_date)
     })
     experiences.value.map((e, index) => {
-      formData.append(`experience[${index}][id]`, e.id)
+      formData.append(`experience[${index}][id]`, e.id ?? "")
       formData.append(`experience[${index}][title]`, e.title)
       formData.append(`experience[${index}][description]`, e.description)
       formData.append(`experience[${index}][company_name]`, e.company_name ?? '')
@@ -249,20 +249,20 @@ const submit = async () => {
       formData.append(`experience[${index}][end_date]`, e.end_date)
     })
     skills.value.map((s, index) => {
-      formData.append(`skills[${index}][id]`, s.id)
+      formData.append(`skills[${index}][id]`, s.id ?? "")
       formData.append(`skills[${index}][title]`, s.title)
       formData.append(`skills[${index}][description]`, s.description)
 
     })
     social_media.value.map((sm, index) => {
-      formData.append(`social_media[${index}][id]`, sm.id)
+      formData.append(`social_media[${index}][id]`, sm.id ?? "")
       formData.append(`social_media[${index}][title]`, sm.title)
       formData.append(`social_media[${index}][description]`, sm.description)
       formData.append(`social_media[${index}][url]`, sm.url)
 
     })
     reels.value.map((r, index) => {
-      formData.append(`reels[${index}][id]`, r.id)
+      formData.append(`reels[${index}][id]`, r.id ?? "")
       formData.append(`reels[${index}][title]`, r.title)
       formData.append(`reels[${index}][description]`, r.description)
       formData.append(`reels[${index}][url]`, r.url)
