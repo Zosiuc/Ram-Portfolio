@@ -32,21 +32,41 @@ class UserMetaController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $validated = $request->validate([
+            'job_title' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'bio' => 'nullable|string',
+            'education_bio' => 'nullable|string',
             'number' => 'nullable|string',
             'email' => 'nullable|string|email',
-            'profile_photo' => 'nullable|file|image|max:2048',
-            'cover_photo' => 'nullable|file|image|max:2048',
-            'education' => 'array',
-            'experience' => 'array',
-            'skills' => 'array',
-            'social_media' => 'array',
-            'reels' => 'array',
+            'birthday' => 'nullable|date',
+
+            'education' => 'nullable|array',
+            'education.*.title' => 'nullable|string',
+            'education.*.description' => 'nullable|string',
+            'education.*.start_date' => 'nullable|date',
+            'education.*.end_date' => 'nullable|date',
+
+            'experience' => 'nullable|array',
+            'experience.*.title' => 'nullable|string',
+            'experience.*.description' => 'nullable|string',
+            'experience.*.company_name' => 'nullable|string',
+            'experience.*.start_date' => 'nullable|date',
+            'experience.*.end_date' => 'nullable|date',
+
+            'skills' => 'nullable|array',
+            'skills.*.title' => 'nullable|string',
+            'skills.*.description' => 'nullable|string',
+
+            'social_media' => 'nullable|array',
+            'social_media.*.title' => 'nullable|string',
+            'social_media.*.description' => 'nullable|string',
+            'social_media.*.url' => 'nullable|url',
+
+            'reels' => 'nullable|array',
+            'reels.*.title' => 'nullable|string',
+            'reels.*.description' => 'nullable|string',
         ]);
 
         // Save profile & cover photos
@@ -57,61 +77,40 @@ class UserMetaController extends Controller
             $validated['cover_photo'] = $request->file('cover_photo')->store('user_meta', 'public');
         }
 
-        $user_meta = UserMeta::update($validated);
+        // Create main UserMeta record
+        $user_meta = UserMeta::create($validated);
 
         // Education
-        if ($request->has('education')) {
-            foreach ($request->education as $edu) {
-                $user_meta->education()->create($edu);
-            }
+        foreach ($request->input('education', []) as $edu) {
+            $user_meta->education()->create($edu);
         }
 
         // Experience
-        if ($request->has('experience')) {
-            foreach ($request->experience as $exp) {
-                $user_meta->experience()->create($exp);
-            }
+        foreach ($request->input('experience', []) as $ex) {
+            $user_meta->experience()->create($ex);
         }
 
         // Skills
-        if ($request->has('skills')) {
-            foreach ($request->skills as $skill) {
-                $user_meta->skills()->create($skill);
-            }
+        foreach ($request->input('skills', []) as $skill) {
+            $user_meta->skills()->create($skill);
         }
 
         // Social Media
-        if ($request->has('social_media')) {
-            foreach ($request->social_media as $sm) {
-                $user_meta->socialMedia()->create($sm);
-            }
+        foreach ($request->input('social_media', []) as $sm) {
+            $user_meta->socialMedia()->create($sm);
         }
 
-        // Reel
-        if ($request->has('reels')) {
-            foreach ($request->reels as $reel) {
-                $user_meta->reels()->create($reel);
-            }
+        // Reels
+        foreach ($request->input('reels', []) as $reel) {
+            $user_meta->reels()->create($reel);
         }
 
-        return response()->json($user_meta->load('education', 'experience', 'skills', 'socialMedia', 'reels'), 201);
+        return response()->json(
+            $user_meta->load('education', 'experience', 'skills', 'socialMedia', 'reels'),
+            201
+        );
     }
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        \Log::info($id);
-        $userMeta = UserMeta::with(['education', 'experience', 'skills', 'socialMedia', 'reels'])->find($id);
-
-        if (!$id) {
-            return response()->json(['message' => 'UserMeta not found'], 404);
-        }
-
-        return response()->json($userMeta);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -172,11 +171,8 @@ class UserMetaController extends Controller
             $validated['cover_photo'] = $request->file('cover_photo')->store('user_meta', 'public');
         }
 
-        if (!$request->has('id')) {
-            $user_meta = UserMeta::create($validated);
-        } else {
-            $user_meta->update($validated);
-        }
+        $user_meta->update($validated);
+
         // Education
         $educations = $request->input('education', []); // fallback naar lege array
         foreach ($educations as $edu) {

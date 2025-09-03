@@ -217,7 +217,7 @@ watch(
 const submit = async () => {
   try {
     const formData = new FormData()
-    formData.append('id', auth.user.id)
+    formData.append('id', auth.user.id ?? "" )
     formData.append('bio', bio.value ?? "")
     formData.append('education_bio', educationBio.value ?? "")
     formData.append('job_title', details.value?.job_title ?? "" )
@@ -273,8 +273,11 @@ const submit = async () => {
       console.log(`${key}:`, value)
     }
     formData.append('_method', 'PUT')
-
-   await api.post(`/user-metas/${auth.user.id}`, formData)
+    if (auth.user.id) {
+      await api.post(`/user-metas/${auth.user.id}`, formData)
+      msg.value = {text: "Saved successfully!", status: true};
+    }
+    await api.post(`/user-metas`, formData)
     msg.value = {text: "Saved successfully!", status: true};
   } catch (err: any) {
     msg.value = {text: `Error saving\n${err}`, status: false};
