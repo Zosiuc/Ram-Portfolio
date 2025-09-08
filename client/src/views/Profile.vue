@@ -12,7 +12,6 @@ const imgURL = import.meta.env.VITE_API_URL + "/";
 // Types
 interface Education {
   id: string;
-  user_meta_id: string;
   title: string;
   description: string;
   start_date: string ;
@@ -25,14 +24,12 @@ interface Experience extends Education {
 
 interface Skill {
   id: string;
-  user_meta_id: string;
   title: string;
   description: string;
 }
 
 interface Social {
   id: string;
-  user_meta_id: string;
   title: string;
   description: string;
   url: string;
@@ -40,7 +37,6 @@ interface Social {
 
 interface Reel {
   id: string;
-  user_meta_id: string;
   title: string;
   description: string;
   url: string;
@@ -99,7 +95,6 @@ onMounted(async () => {
     education.value = Array.isArray(data.education)
       ? mapArray<Education>(data.education, [
         "id",
-        "user_meta_id",
         "title",
         "description",
         "start_date",
@@ -110,7 +105,6 @@ onMounted(async () => {
     experiences.value = Array.isArray(data.experience)
       ? mapArray<Experience>(data.experience, [
         "id",
-        "user_meta_id",
         "title",
         "company_name",
         "description",
@@ -126,7 +120,6 @@ onMounted(async () => {
     social_media.value = Array.isArray(data.social_media)
       ? mapArray<Social>(data.social_media, [
         "id",
-        "user_meta_id",
         "title",
         "description",
         "url",
@@ -134,7 +127,7 @@ onMounted(async () => {
       : [];
 
     reels.value = Array.isArray(data.reels)
-      ? mapArray<Reel>(data.reels, ["id","user_meta_id", "title", "description", "url"])
+      ? mapArray<Reel>(data.reels, ["id", "title", "description", "url"])
       : [];
 
     console.log("Data loaded:", data);
@@ -150,7 +143,6 @@ const addItem = (item: string) => {
     case item = 'education'  :
       education.value.push({
         id: "",
-        user_meta_id: auth.user.id,
         title: "",
         description: "",
         start_date: "",
@@ -160,7 +152,6 @@ const addItem = (item: string) => {
     case item = 'experience'  :
       experiences.value.push({
         id: "",
-        user_meta_id: auth.user.id,
         title: "",
         description: "",
         company_name: "",
@@ -171,7 +162,6 @@ const addItem = (item: string) => {
     case item = 'skill'  :
       skills.value.push({
         id: "",
-        user_meta_id: auth.user.id,
         title: "",
         description: "",
       })
@@ -179,7 +169,6 @@ const addItem = (item: string) => {
     case item = 'social_media' :
       social_media.value.push({
         id: "",
-        user_meta_id: auth.user.id,
         title: "",
         description: "",
         url: ""
@@ -188,7 +177,6 @@ const addItem = (item: string) => {
     case item = 'reel'  :
       reels.value.push({
         id: "",
-        user_meta_id: auth.user.id,
         title: "",
         description: "",
         url: ""
@@ -249,7 +237,6 @@ const submit = async () => {
       if(e.id){
         formData.append(`education[${index}][id]`, e.id ?? "")
       }
-      formData.append(`education[${index}][user_meta_id]`, e.user_meta_id)
       formData.append(`education[${index}][title]`, e.title)
       formData.append(`education[${index}][description]`, e.description)
       formData.append(`education[${index}][start_date]`, e.start_date)
@@ -257,7 +244,6 @@ const submit = async () => {
     })
     experiences.value.map((e, index) => {
       formData.append(`experience[${index}][id]`, e.id ?? "")
-      formData.append(`experience[${index}][user_meta_id]`, e.user_meta_id)
       formData.append(`experience[${index}][title]`, e.title)
       formData.append(`experience[${index}][description]`, e.description)
       formData.append(`experience[${index}][company_name]`, e.company_name ?? '')
@@ -266,14 +252,12 @@ const submit = async () => {
     })
     skills.value.map((s, index) => {
       formData.append(`skills[${index}][id]`, s.id ?? "")
-      formData.append(`skills[${index}][user_meta_id]`, s.user_meta_id)
       formData.append(`skills[${index}][title]`, s.title)
       formData.append(`skills[${index}][description]`, s.description)
 
     })
     social_media.value.map((sm, index) => {
       formData.append(`social_media[${index}][id]`, sm.id ?? "")
-      formData.append(`social_media[${index}][user_meta_id]`, sm.user_meta_id)
       formData.append(`social_media[${index}][title]`, sm.title)
       formData.append(`social_media[${index}][description]`, sm.description)
       formData.append(`social_media[${index}][url]`, sm.url)
@@ -281,7 +265,6 @@ const submit = async () => {
     })
     reels.value.map((r, index) => {
       formData.append(`reels[${index}][id]`, r.id ?? "")
-      formData.append(`reels[${index}][user_meta_id]`, r.user_meta_id)
       formData.append(`reels[${index}][title]`, r.title)
       formData.append(`reels[${index}][description]`, r.description)
       formData.append(`reels[${index}][url]`, r.url)
