@@ -119,7 +119,8 @@
 body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+
+  width: 100vw;
   min-height: 100lvh;
   color: var(--color-text-2);
   background: var(--color-background);

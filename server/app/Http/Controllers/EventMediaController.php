@@ -12,6 +12,7 @@ class EventMediaController extends Controller
     // 1. Media opslaan bij een subject
     public function store(Request $request, Event $event)
     {
+        \Log::info($request->all());
         $validated = $request->validate([
             'media_type' => 'required|in:image,video',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,gif',
@@ -37,6 +38,7 @@ class EventMediaController extends Controller
     // 2. Media updaten
     public function update(Request $request, EventMedia $media)
     {
+        \Log::info($request->all());
         $validated = $request->validate([
             'media_type' => 'required|in:image,video',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,gif',

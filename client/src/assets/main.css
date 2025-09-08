@@ -103,10 +103,6 @@ input, textarea {
   }
 }
 
-@media (min-width: 1280px) {
-  body{
-    padding: 0 10%;
-  }
-}
+
 
 

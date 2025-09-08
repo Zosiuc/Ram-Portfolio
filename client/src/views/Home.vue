@@ -81,7 +81,7 @@ onMounted(async () => {
 onMounted(async () => {
   try {
     const {data} = await api.get('/events')
-    events.value = data.data
+    events.value = data.data.filter((e:any) => new Date(e.date).getTime() < Date.now())
     loading.value = false
     loading.value = false
   } catch (err) {
@@ -155,7 +155,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div v-if="events?.filter((e:any) => new Date(e.date).getTime() < Date.now())" class="portfolio_item">
+    <div v-if="events && events.length > 0" class="portfolio_item">
       <div class="portfolio_item_header">
         <h2>Work experiences</h2>
       </div>
@@ -270,7 +270,6 @@ onMounted(async () => {
   flex-direction: column;
   justify-content: center;
   gap: 50px;
-
   backdrop-filter: opacity(0.9) blur(5px);
 }
 

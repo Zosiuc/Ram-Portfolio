@@ -84,7 +84,7 @@ import {RouterLink, RouterView} from "vue-router";
     height: 85.5vh;
     gap: 1rem;
     background: none;
-    padding: 3rem 1rem;
+    padding: 5.5rem 1rem;
     border-right: 2px solid var(--color-border);
     border-bottom: none;
   }

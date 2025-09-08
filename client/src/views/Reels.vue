@@ -108,8 +108,10 @@ onMounted(async () => {
 .instagram-video-wrapper {
   display: flex;
   flex-direction: column;
+
   gap: 20px;
-  width: 100%;
+
+
   h2{
     padding: .5rem;
     width: 100%;
@@ -134,12 +136,10 @@ onMounted(async () => {
   width: 100% !important;
 }
 
-@media (min-width: 750px) {
+@media (min-width: 950px) {
   .reel {
-    max-width: 80%;
-    max-height: 98lvh;
-    margin: 0 10%;
-
+    max-width: 700px;
+    margin: 0 25%;
 
   }
 }

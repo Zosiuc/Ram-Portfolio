@@ -110,7 +110,45 @@ class UserMetaController extends Controller
             201
         );
     }
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        \Log::info($id);
+        $userMeta = UserMeta::with(['education', 'experience', 'skills', 'socialMedia', 'reels'])->find($id);
 
+        if (!$id) {
+            return response()->json(['message' => 'UserMeta not found'], 404);
+        }else return response()->json($userMeta);
+    }
+
+
+    protected function syncRelations(UserMeta $user_meta, Request $request, array $relations)
+    {
+        foreach ($relations as $relation) {
+            $items = $request->input($relation, []);
+
+            // Verzamel alle IDs die meegestuurd zijn
+            $ids = collect($items)->pluck('id')->filter()->toArray();
+
+            // Verwijder alles wat niet meer in de request zit
+            $user_meta->$relation()->whereNotIn('id', $ids)->delete();
+
+            // Update of create de resterende items
+            foreach ($items as $item) {
+                if (!empty($item['id'])) {
+                    $user_meta->$relation()->updateOrCreate(
+                        ['id' => $item['id']],
+                        $item
+                    );
+                } else {
+                    $user_meta->$relation()->create($item);
+                }
+            }
+        }
+
+    }
 
     /**
      * Update the specified resource in storage.
@@ -118,6 +156,8 @@ class UserMetaController extends Controller
 
     public function update(Request $request, UserMeta $user_meta)
     {
+        \Log::info($request->all());
+
         $validated = $request->validate([
             'job_title' => 'required|string',
             'first_name' => 'required|string',
@@ -129,37 +169,17 @@ class UserMetaController extends Controller
             'birthday' => 'nullable|date',
 
             'education' => 'nullable|array',
-            'education.*.id' => 'nullable|integer',
-            'education.*.title' => 'nullable|string',
-            'education.*.description' => 'nullable|string',
-            'education.*.start_date' => 'nullable|date',
-            'education.*.end_date' => 'nullable|date',
 
             'experience' => 'nullable|array',
-            'experience.*.id' => 'nullable|integer',
-            'experience.*.title' => 'nullable|string',
-            'experience.*.description' => 'nullable|string',
-            'experience.*.company_name' => 'nullable|string',
-            'experience.*.start_date' => 'nullable|date',
-            'experience.*.end_date' => 'nullable|date',
 
             'skills' => 'nullable|array',
-            'skills.*.id' => 'nullable|integer',
-            'skills.*.title' => 'nullable|string',
-            'skills.*.description' => 'nullable|string',
 
             'social_media' => 'nullable|array',
-            'social_media.*.id' => 'nullable|integer',
-            'social_media.*.title' => 'nullable|string',
-            'social_media.*.description' => 'nullable|string',
-            'social_media.*.url' => 'nullable|url',
 
             'reels' => 'nullable|array',
-            'reels.*.id' => 'nullable|integer',
-            'reels.*.title' => 'nullable|string',
-            'reels.*.description' => 'nullable|string',
         ]);
 
+        // Save profile & cover photos
         if ($request->hasFile('profile_photo')) {
             $validated['profile_photo'] = $request->file('profile_photo')->store('user_meta', 'public');
         }
@@ -168,60 +188,17 @@ class UserMetaController extends Controller
         }
 
         $user_meta->update($validated);
+        \Log::info('Updated UserMeta: ' . $user_meta->id);
 
-        // Education
-        foreach ($request->input('education', []) as $edu) {
-            $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($edu['id'])) {
-                $attributes['id'] = $edu['id']; // ✅ juist veld
-            }
-            $user_meta->education()->updateOrCreate(
-                $attributes,
-                $edu
-            );
-        }
-
-        // Experience
-        foreach ($request->input('experience', []) as $ex) {
-            $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($ex['id'])) {
-                $attributes['id'] = $ex['id'];
-            }
-            $user_meta->experience()->updateOrCreate($attributes, $ex);
-        }
-
-        // Skills
-        foreach ($request->input('skills', []) as $skill) {
-            $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($skill['id'])) {
-                $attributes['id'] = $skill['id'];
-            }
-            $user_meta->skills()->updateOrCreate($attributes, $skill);
-        }
-
-        // Social Media
-        foreach ($request->input('social_media', []) as $sm) {
-            $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($sm['id'])) {
-                $attributes['id'] = $sm['id'];
-            }
-            $user_meta->socialMedia()->updateOrCreate($attributes, $sm);
-        }
-
-        // Reels
-        foreach ($request->input('reels', []) as $reel) {
-            $attributes = ['user_meta_id' => $user_meta->id];
-            if (!empty($reel['id'])) {
-                $attributes['id'] = $reel['id'];
-            }
-            $user_meta->reels()->updateOrCreate($attributes, $reel);
-        }
+        $this->syncRelations($user_meta, $request,
+            ['education', 'experience', 'skills', 'socialMedia', 'reels']);
 
         return response()->json(
             $user_meta->load('education', 'experience', 'skills', 'socialMedia', 'reels'),
             200
         );
     }
+
 
 
     /**
