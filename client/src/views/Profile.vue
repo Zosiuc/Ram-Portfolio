@@ -85,7 +85,7 @@ onMounted(async () => {
     educationBio.value = data.education_bio;
 
     details.value = {
-      id: auth.user.id,
+      id: data.id,
       job_title: data.job_title,
       first_name: data.first_name,
       last_name: data.last_name,
@@ -219,6 +219,7 @@ watch(
 const submit = async () => {
   try {
     const formData = new FormData()
+
     formData.append('id', details.value.id ?? "" )
     formData.append('bio', bio.value ?? "")
     formData.append('education_bio', educationBio.value ?? "")
