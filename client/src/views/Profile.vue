@@ -217,7 +217,7 @@ watch(
 const submit = async () => {
   try {
     const formData = new FormData()
-    formData.append('id', auth.user.id ?? "" )
+
     formData.append('bio', bio.value ?? "")
     formData.append('education_bio', educationBio.value ?? "")
     formData.append('job_title', details.value?.job_title ?? "" )
@@ -234,7 +234,9 @@ const submit = async () => {
       formData.append("cover_photo", cover_photo.value)
     }
     education.value.map((e, index) => {
-      formData.append(`education[${index}][id]`, e.id ?? "")
+      if(e.id){
+        formData.append(`education[${index}][id]`, e.id ?? "")
+      }
       formData.append(`education[${index}][title]`, e.title)
       formData.append(`education[${index}][description]`, e.description)
       formData.append(`education[${index}][start_date]`, e.start_date)
