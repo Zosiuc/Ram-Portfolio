@@ -51,6 +51,7 @@ const profile_photo = ref<File | string>();
 const bio = ref("");
 const educationBio = ref("")
 const details = ref({
+  id:"",
   job_title: "",
   first_name: "",
   last_name: "",
@@ -84,6 +85,7 @@ onMounted(async () => {
     educationBio.value = data.education_bio;
 
     details.value = {
+      id: auth.user.id,
       job_title: data.job_title,
       first_name: data.first_name,
       last_name: data.last_name,
@@ -217,7 +219,7 @@ watch(
 const submit = async () => {
   try {
     const formData = new FormData()
-    formData.append('id', auth.user.id ?? "" )
+    formData.append('id', details.value.id ?? "" )
     formData.append('bio', bio.value ?? "")
     formData.append('education_bio', educationBio.value ?? "")
     formData.append('job_title', details.value?.job_title ?? "" )
