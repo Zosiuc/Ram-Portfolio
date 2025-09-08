@@ -6,6 +6,8 @@ export const api = axios.create({
   withCredentials: true,
   xsrfCookieName: 'XSRF-TOKEN',
   xsrfHeaderName: 'X-XSRF-TOKEN',
+  timeout: 600000,
+
 });
 export async function csrf(){
   await axios.get(import.meta.env.VITE_API_URL+"/sanctum/csrf-cookie", {

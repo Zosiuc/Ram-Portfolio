@@ -32,21 +32,41 @@ class UserMetaController extends Controller
      */
     public function store(Request $request)
     {
-        \Log::info($request->all());
-
         $validated = $request->validate([
+            'job_title' => 'required|string',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'bio' => 'nullable|string',
+            'education_bio' => 'nullable|string',
             'number' => 'nullable|string',
             'email' => 'nullable|string|email',
-            'profile_photo' => 'nullable|file|image|max:2048',
-            'cover_photo' => 'nullable|file|image|max:2048',
-            'education' => 'array',
-            'experience' => 'array',
-            'skills' => 'array',
-            'social_media' => 'array',
-            'reels' => 'array',
+            'birthday' => 'nullable|date',
+
+            'education' => 'nullable|array',
+            'education.*.title' => 'nullable|string',
+            'education.*.description' => 'nullable|string',
+            'education.*.start_date' => 'nullable|date',
+            'education.*.end_date' => 'nullable|date',
+
+            'experience' => 'nullable|array',
+            'experience.*.title' => 'nullable|string',
+            'experience.*.description' => 'nullable|string',
+            'experience.*.company_name' => 'nullable|string',
+            'experience.*.start_date' => 'nullable|date',
+            'experience.*.end_date' => 'nullable|date',
+
+            'skills' => 'nullable|array',
+            'skills.*.title' => 'nullable|string',
+            'skills.*.description' => 'nullable|string',
+
+            'social_media' => 'nullable|array',
+            'social_media.*.title' => 'nullable|string',
+            'social_media.*.description' => 'nullable|string',
+            'social_media.*.url' => 'nullable|url',
+
+            'reels' => 'nullable|array',
+            'reels.*.title' => 'nullable|string',
+            'reels.*.description' => 'nullable|string',
         ]);
 
         // Save profile & cover photos
@@ -57,73 +77,47 @@ class UserMetaController extends Controller
             $validated['cover_photo'] = $request->file('cover_photo')->store('user_meta', 'public');
         }
 
+        // Create main UserMeta record
         $user_meta = UserMeta::create($validated);
 
         // Education
-        if ($request->has('education')) {
-            foreach ($request->education as $edu) {
-                $user_meta->education()->create($edu);
-            }
+        foreach ($request->input('education', []) as $edu) {
+            $user_meta->education()->create($edu);
         }
 
         // Experience
-        if ($request->has('experience')) {
-            foreach ($request->experience as $exp) {
-                $user_meta->experience()->create($exp);
-            }
+        foreach ($request->input('experience', []) as $ex) {
+            $user_meta->experience()->create($ex);
         }
 
         // Skills
-        if ($request->has('skills')) {
-            foreach ($request->skills as $skill) {
-                $user_meta->skills()->create($skill);
-            }
+        foreach ($request->input('skills', []) as $skill) {
+            $user_meta->skills()->create($skill);
         }
 
         // Social Media
-        if ($request->has('social_media')) {
-            foreach ($request->social_media as $sm) {
-                $user_meta->socialMedia()->create($sm);
-            }
+        foreach ($request->input('social_media', []) as $sm) {
+            $user_meta->socialMedia()->create($sm);
         }
 
-        // Reel
-        if ($request->has('reels')) {
-            foreach ($request->reels as $reel) {
-                $user_meta->reels()->create($reel);
-            }
+        // Reels
+        foreach ($request->input('reels', []) as $reel) {
+            $user_meta->reels()->create($reel);
         }
 
-        return response()->json($user_meta->load('education','experience','skills','socialMedia','reels'), 201);
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserMeta $userMeta)
-    {
         return response()->json(
-            $userMeta->load(['education', 'experience', 'skills', 'socialMedia', 'reels'])
+            $user_meta->load('education', 'experience', 'skills', 'socialMedia', 'reels'),
+            201
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserMeta $userMeta)
-    {
-        return response()->json(['message' => 'UserMeta edit form (frontend)']);
-    }
 
     /**
      * Update the specified resource in storage.
      */
 
     public function update(Request $request, UserMeta $user_meta)
-
     {
-
         $validated = $request->validate([
             'job_title' => 'required|string',
             'first_name' => 'required|string',
@@ -133,91 +127,112 @@ class UserMetaController extends Controller
             'number' => 'nullable|string',
             'email' => 'nullable|string|email',
             'birthday' => 'nullable|date',
-            'education' => 'array',
-            'experience' => 'array',
-            'skills' => 'array',
-            'social_media' => 'array',
-            'reels' => 'array',
+
+            'education' => 'nullable|array',
+            'education.*.id' => 'nullable|integer',
+            'education.*.title' => 'nullable|string',
+            'education.*.description' => 'nullable|string',
+            'education.*.start_date' => 'nullable|date',
+            'education.*.end_date' => 'nullable|date',
+
+            'experience' => 'nullable|array',
+            'experience.*.id' => 'nullable|integer',
+            'experience.*.title' => 'nullable|string',
+            'experience.*.description' => 'nullable|string',
+            'experience.*.company_name' => 'nullable|string',
+            'experience.*.start_date' => 'nullable|date',
+            'experience.*.end_date' => 'nullable|date',
+
+            'skills' => 'nullable|array',
+            'skills.*.id' => 'nullable|integer',
+            'skills.*.title' => 'nullable|string',
+            'skills.*.description' => 'nullable|string',
+
+            'social_media' => 'nullable|array',
+            'social_media.*.id' => 'nullable|integer',
+            'social_media.*.title' => 'nullable|string',
+            'social_media.*.description' => 'nullable|string',
+            'social_media.*.url' => 'nullable|url',
+
+            'reels' => 'nullable|array',
+            'reels.*.id' => 'nullable|integer',
+            'reels.*.title' => 'nullable|string',
+            'reels.*.description' => 'nullable|string',
         ]);
 
-        // ✅ Update profile & cover photos
         if ($request->hasFile('profile_photo')) {
-            $file =$request->file('profile_photo');
-            if($file) {
-                $path = $file->store('user_meta', 'public');
-                $validated['profile_photo'] = $path;
-            }
+            $validated['profile_photo'] = $request->file('profile_photo')->store('user_meta', 'public');
         }
         if ($request->hasFile('cover_photo')) {
-            $file =$request->file('cover_photo');
-            if($file) {
-                $path = $file->store('user_meta', 'public');
-                $validated['cover_photo'] = $path;
-            }
-
+            $validated['cover_photo'] = $request->file('cover_photo')->store('user_meta', 'public');
         }
 
         $user_meta->update($validated);
 
-
-
         // Education
-
-        if ($request->has('education')) {
-            $user_meta->education()->delete();
-            foreach ($request->education as $edu) {
-                $user_meta->education()->updateOrCreate(['id' => $edu['id'] ?? null],$edu);
+        foreach ($request->input('education', []) as $edu) {
+            $attributes = ['user_meta_id' => $user_meta->id];
+            if (!empty($edu['id'])) {
+                $attributes['id'] = $edu['id']; // ✅ juist veld
             }
-        }else $user_meta->education()->delete();
+            $user_meta->education()->updateOrCreate(
+                $attributes,
+                $edu
+            );
+        }
 
         // Experience
-
-        if ($request->has('experience')) {
-            $user_meta->experience()->delete();
-            foreach ($request->experience as $exp) {
-                $user_meta->experience()->updateOrCreate(['id' => $exp['id'] ?? null],$exp);
+        foreach ($request->input('experience', []) as $ex) {
+            $attributes = ['user_meta_id' => $user_meta->id];
+            if (!empty($ex['id'])) {
+                $attributes['id'] = $ex['id'];
             }
-        }else $user_meta->experience()->delete();
+            $user_meta->experience()->updateOrCreate($attributes, $ex);
+        }
 
         // Skills
-
-        if ($request->has('skills')) {
-            $user_meta->skills()->delete();
-            foreach ($request->skills as $skill) {
-                $user_meta->skills()->updateOrCreate(['id' => $skill['id'] ?? null],$skill);
+        foreach ($request->input('skills', []) as $skill) {
+            $attributes = ['user_meta_id' => $user_meta->id];
+            if (!empty($skill['id'])) {
+                $attributes['id'] = $skill['id'];
             }
-        }else $user_meta->skills()->delete();
+            $user_meta->skills()->updateOrCreate($attributes, $skill);
+        }
 
         // Social Media
-
-        if ($request->has('social_media')) {
-            $user_meta->socialMedia()->delete();
-            foreach ($request->social_media as $sm) {
-                $user_meta->socialMedia()->updateOrCreate(['id' => $sm['id'] ?? null],$sm);
+        foreach ($request->input('social_media', []) as $sm) {
+            $attributes = ['user_meta_id' => $user_meta->id];
+            if (!empty($sm['id'])) {
+                $attributes['id'] = $sm['id'];
             }
-        }else $user_meta->socialMedia()->delete();
+            $user_meta->socialMedia()->updateOrCreate($attributes, $sm);
+        }
 
-        // Reel
-        if ($request->has('reels')) {
-            $user_meta->reels()->delete();
-            foreach ($request->reels as $reel) {
-                $user_meta->reels()->updateOrCreate(['id' => $reel['id'] ?? null],$reel);
+        // Reels
+        foreach ($request->input('reels', []) as $reel) {
+            $attributes = ['user_meta_id' => $user_meta->id];
+            if (!empty($reel['id'])) {
+                $attributes['id'] = $reel['id'];
             }
-        }else $user_meta->reels()->delete();
-
+            $user_meta->reels()->updateOrCreate($attributes, $reel);
+        }
 
         return response()->json(
-            $user_meta->load(['education', 'experience', 'skills', 'socialMedia', 'reels'])
+            $user_meta->load('education', 'experience', 'skills', 'socialMedia', 'reels'),
+            200
         );
-
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserMeta $userMeta)
+    public
+    function destroy(UserMeta $userMeta)
     {
         $userMeta->delete();
         return response()->json(null, 204);
     }
 }
+
+

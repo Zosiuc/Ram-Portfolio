@@ -101,14 +101,16 @@ const submit = async () => {
     if (m.id) {
     formData.append(`media[${index}][id]`, m.id)
     }
-    formData.append(`media[${index}][media_type]`, m.type)
     if (m.type === 'image' && m.file) {
+      formData.append(`media[${index}][media_type]`, m.type)
       formData.append(`media[${index}][file]`, m.file)
     } else if (m.type === 'image' && m.url) {
       // bestaand bestand behouden
+      formData.append(`media[${index}][media_type]`, m.type)
       formData.append(`media[${index}][url]`, m.url)
     }
     if (m.type === 'video' && m.url) {
+      formData.append(`media[${index}][media_type]`, m.type)
       formData.append(`media[${index}][url]`, m.url)
     }
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
-import {api, csrf} from "@/lib/api.ts";
-import {useRouter} from "vue-router";
+import {api} from "@/lib/api.ts";
 import {useAuth} from "@/stores/auth.ts";
 
 
@@ -77,7 +76,6 @@ const mapArray = <T>(arr: any[], keys: (keyof T)[]): T[] =>
 
 onMounted(async () => {
   try {
-    await csrf();
     const {data} = await api.get(`/user-metas/${auth.user.id}`);
 
     cover_photo.value = data.cover_photo;
@@ -85,14 +83,14 @@ onMounted(async () => {
     bio.value = data.bio;
     educationBio.value = data.education_bio;
 
-    Object.assign(details.value, {
+    details.value = {
       job_title: data.job_title,
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
       mobile: data.number,
       birthday: data.birthday,
-    });
+    };
 
     education.value = Array.isArray(data.education)
       ? mapArray<Education>(data.education, [
@@ -219,14 +217,15 @@ watch(
 const submit = async () => {
   try {
     const formData = new FormData()
-    formData.append('bio', bio.value)
-    formData.append('education_bio', educationBio.value)
-    formData.append('job_title', details.value.job_title)
-    formData.append('first_name', details.value.first_name)
-    formData.append('last_name', details.value.last_name)
-    formData.append('birthday', details.value.birthday)
-    formData.append('number', details.value.mobile)
-    formData.append('email', details.value.email)
+    formData.append('id', auth.user.id ?? "" )
+    formData.append('bio', bio.value ?? "")
+    formData.append('education_bio', educationBio.value ?? "")
+    formData.append('job_title', details.value?.job_title ?? "" )
+    formData.append('first_name', details.value?.first_name ?? "" )
+    formData.append('last_name', details.value?.last_name ?? "" )
+    formData.append('birthday', details.value?.birthday ?? "" )
+    formData.append('number', details.value?.mobile ?? "" )
+    formData.append('email', details.value?.email ?? "" )
 
     if (profile_photo.value instanceof File) {
       formData.append("profile_photo", profile_photo.value)
@@ -235,14 +234,14 @@ const submit = async () => {
       formData.append("cover_photo", cover_photo.value)
     }
     education.value.map((e, index) => {
-      formData.append(`education[${index}][id]`, e.id)
+      formData.append(`education[${index}][id]`, e.id ?? "")
       formData.append(`education[${index}][title]`, e.title)
       formData.append(`education[${index}][description]`, e.description)
       formData.append(`education[${index}][start_date]`, e.start_date)
       formData.append(`education[${index}][end_date]`, e.end_date)
     })
     experiences.value.map((e, index) => {
-      formData.append(`experience[${index}][id]`, e.id)
+      formData.append(`experience[${index}][id]`, e.id ?? "")
       formData.append(`experience[${index}][title]`, e.title)
       formData.append(`experience[${index}][description]`, e.description)
       formData.append(`experience[${index}][company_name]`, e.company_name ?? '')
@@ -250,20 +249,20 @@ const submit = async () => {
       formData.append(`experience[${index}][end_date]`, e.end_date)
     })
     skills.value.map((s, index) => {
-      formData.append(`skills[${index}][id]`, s.id)
+      formData.append(`skills[${index}][id]`, s.id ?? "")
       formData.append(`skills[${index}][title]`, s.title)
       formData.append(`skills[${index}][description]`, s.description)
 
     })
     social_media.value.map((sm, index) => {
-      formData.append(`social_media[${index}][id]`, sm.id)
+      formData.append(`social_media[${index}][id]`, sm.id ?? "")
       formData.append(`social_media[${index}][title]`, sm.title)
       formData.append(`social_media[${index}][description]`, sm.description)
       formData.append(`social_media[${index}][url]`, sm.url)
 
     })
     reels.value.map((r, index) => {
-      formData.append(`reels[${index}][id]`, r.id)
+      formData.append(`reels[${index}][id]`, r.id ?? "")
       formData.append(`reels[${index}][title]`, r.title)
       formData.append(`reels[${index}][description]`, r.description)
       formData.append(`reels[${index}][url]`, r.url)
@@ -274,8 +273,12 @@ const submit = async () => {
       console.log(`${key}:`, value)
     }
     formData.append('_method', 'PUT')
-
-   await api.post(`/user-metas/${auth.user.id}`, formData)
+    if (auth.user.id) {
+      await api.post(`/user-metas/${auth.user.id}`, formData)
+      msg.value = {text: "Saved successfully!", status: true};
+    }else {
+      await api.post(`/user-metas`, formData)
+    }
     msg.value = {text: "Saved successfully!", status: true};
   } catch (err: any) {
     msg.value = {text: `Error saving\n${err}`, status: false};
@@ -348,7 +351,7 @@ const submit = async () => {
       </div>
       <div class="veld raed_only">
         <label for="email">Email: </label>
-        <input id="email" type="text" class="veld_input" placeholder="What is your email address?"
+        <input id="email" type="email" class="veld_input" placeholder="What is your email address?"
                v-model="details.email"/>
       </div>
       <div class="veld raed_only">
