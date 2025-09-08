@@ -52,6 +52,7 @@ class EventController extends Controller {
     }
 
     public function update(Request $r, Event $event) {
+        \Log::info($r->all());
         $data = $r->validate([
             'title' => 'sometimes|required',
             'description' => 'nullable',

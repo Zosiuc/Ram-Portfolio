@@ -6,7 +6,7 @@ import {useAuth} from "@/stores/auth.ts";
 
 const auth = useAuth();
 
-const imgURL = import.meta.env.VITE_API_URL + "/";
+const imgURL = import.meta.env.VITE_API_URL + "/storage/";
 
 
 // Types
@@ -67,7 +67,8 @@ const reels = ref<Reel[]>([]);
 
 // Helpers
 const getPreview = (file: File | string) =>
-  typeof file === "string" ? imgURL + "storage/" + file : URL.createObjectURL(file);
+  typeof file === "string" ? imgURL + file : URL.createObjectURL(file);
+
 
 const mapArray = <T>(arr: any[], keys: (keyof T)[]): T[] =>
   arr.map((obj) =>

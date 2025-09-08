@@ -9,7 +9,7 @@ class UserMeta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','job_title','first_name', 'last_name', 'bio','education_bio','number','email','profile_photo','cover_photo','birthday'];
+    protected $fillable = ['job_title','first_name', 'last_name', 'bio','education_bio','number','email','profile_photo','cover_photo','birthday'];
 
     public function education()
     {

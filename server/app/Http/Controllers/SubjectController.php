@@ -23,6 +23,7 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
+        \Log::info($request->all());
         $validated = $request->validate([
             'portfolio_item_id' => 'required|exists:portfolio_items,id',
             'title' => 'required|string',
