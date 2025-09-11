@@ -9,31 +9,31 @@ class UserMeta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['job_title','first_name', 'last_name', 'bio','education_bio','number','email','profile_photo','cover_photo','birthday'];
+    protected $fillable = ['user_meta_id','job_title','first_name', 'last_name', 'bio','education_bio','number','email','profile_photo','cover_photo','birthday'];
 
     public function education()
     {
-        return $this->hasMany(Education::class,'user_meta_id');
+        return $this->hasMany(Education::class);
     }
 
     public function experience()
     {
-        return $this->hasMany(Experience::class,'user_meta_id');
+        return $this->hasMany(Experience::class);
     }
 
     public function skills()
     {
-        return $this->hasMany(Skill::class,'user_meta_id');
+        return $this->hasMany(Skill::class);
     }
 
     public function socialMedia()
     {
-        return $this->hasMany(SocialMedia::class,'user_meta_id');
+        return $this->hasMany(SocialMedia::class);
     }
 
     public function reels()
     {
-        return $this->hasMany(Reel::class,'user_meta_id');
+        return $this->hasMany(Reel::class);
     }
 
 }

@@ -258,10 +258,10 @@ const submit = async () => {
 
     })
     social_media.value.map((sm, index) => {
-      formData.append(`social_media[${index}][id]`, sm.id ?? "")
-      formData.append(`social_media[${index}][title]`, sm.title)
-      formData.append(`social_media[${index}][description]`, sm.description)
-      formData.append(`social_media[${index}][url]`, sm.url)
+      formData.append(`socialMedia[${index}][id]`, sm.id ?? "")
+      formData.append(`socialMedia[${index}][title]`, sm.title)
+      formData.append(`socialMedia[${index}][description]`, sm.description)
+      formData.append(`socialMedia[${index}][url]`, sm.url)
 
     })
     reels.value.map((r, index) => {

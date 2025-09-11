@@ -154,7 +154,7 @@ class UserMetaController extends Controller
      * Update the specified resource in storage.
      */
 
-    public function update(Request $request, UserMeta $user_meta)
+    public function update(Request $request, UserMeta $userMeta)
     {
         \Log::info($request->all());
 
@@ -174,7 +174,7 @@ class UserMetaController extends Controller
 
             'skills' => 'nullable|array',
 
-            'social_media' => 'nullable|array',
+            'socialMedia' => 'nullable|array',
 
             'reels' => 'nullable|array',
         ]);
@@ -187,14 +187,15 @@ class UserMetaController extends Controller
             $validated['cover_photo'] = $request->file('cover_photo')->store('user_meta', 'public');
         }
 
-        $user_meta->update($validated);
-        \Log::info('Updated UserMeta: ' . $user_meta->id);
+        $userMeta->update($validated);
 
-        $this->syncRelations($user_meta, $request,
+        \Log::info('Updated UserMeta: ' . $userMeta->id);
+
+        $this->syncRelations($userMeta, $request,
             ['education', 'experience', 'skills', 'socialMedia', 'reels']);
 
         return response()->json(
-            $user_meta->load('education', 'experience', 'skills', 'socialMedia', 'reels'),
+            $userMeta->load('education', 'experience', 'skills', 'socialMedia', 'reels'),
             200
         );
     }
@@ -209,6 +210,15 @@ class UserMetaController extends Controller
     {
         $userMeta->delete();
         return response()->json(null, 204);
+    }
+
+    public  function dd($value): void
+    {
+        echo '<pre>';
+        dump($value);
+        echo '</pre>';
+
+        die();
     }
 }
 
