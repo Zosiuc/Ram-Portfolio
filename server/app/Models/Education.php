@@ -11,8 +11,8 @@ class Education extends Model
 
     protected $fillable = ['user_meta_id', 'title', 'description','start_date','end_date'];
 
-    public function user_meta()
+    public function userMeta()
     {
-        return $this->belongsTo(UserMeta::class,'user_meta_id');
+        return $this->belongsTo(UserMeta::class);
     }
 }
